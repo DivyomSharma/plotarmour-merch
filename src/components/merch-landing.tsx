@@ -13,6 +13,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { TypeHeadline } from "@/components/type-headline";
 import { InteractiveRedElement } from "@/components/interactive-red-element";
 import { MarqueeBanner } from "@/components/marquee-banner";
+import { MediaGallery } from "@/components/media-gallery";
 
 const audiences = [
   {
@@ -688,6 +689,20 @@ export function MerchLanding() {
                 </ScrollReveal>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="section-shell border-b-[4px] border-foreground py-16 md:py-24 overflow-hidden">
+          <div className="mx-auto max-w-7xl px-4 md:px-6">
+            <ScrollReveal>
+              <SectionTag>Our Work</SectionTag>
+              <h2 className="mt-6 max-w-4xl font-display text-4xl font-black uppercase leading-[0.95] md:text-6xl">
+                We let the merch speak for itself.
+              </h2>
+            </ScrollReveal>
+          </div>
+          <div className="mt-10">
+            <MediaGallery />
           </div>
         </section>
 
