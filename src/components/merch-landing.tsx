@@ -393,10 +393,14 @@ function ProcessStep({
 }) {
   return (
     <ScrollReveal delay={index * 0.08}>
-      <div className="brutal-panel h-full bg-black p-6">
-        <p className="font-display text-5xl font-black text-red-500">{number}</p>
-        <h3 className="mt-5 font-display text-2xl font-black uppercase">{title}</h3>
-        <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-muted">
+      <div className="brutal-panel h-full bg-black p-6 text-white">
+        <p className="font-display text-5xl font-black text-red-500">
+          {number}
+        </p>
+        <h3 className="mt-5 font-display text-2xl font-black uppercase text-white">
+          {title}
+        </h3>
+        <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-white/60">
           {description}
         </p>
       </div>
@@ -457,12 +461,14 @@ function PackageCard({
   detail: string;
 }) {
   return (
-    <div className="brutal-panel bg-black p-6">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-muted">
+    <div className="brutal-panel bg-black p-6 text-white">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-white/60">
         {range}
       </p>
-      <h3 className="mt-3 font-display text-3xl font-black uppercase">{name}</h3>
-      <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-muted">
+      <h3 className="mt-8 font-display text-4xl font-black uppercase text-white">
+        {name}
+      </h3>
+      <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-white/60">
         {detail}
       </p>
       <div className="mt-6">

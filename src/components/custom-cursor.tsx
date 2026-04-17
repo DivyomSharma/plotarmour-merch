@@ -28,14 +28,21 @@ export function CustomCursor() {
     let pointerY = window.innerHeight / 2;
     let haloX = pointerX;
     let haloY = pointerY;
+    let targetScaleDot = 1;
+    let targetScaleHalo = 1;
+    let currentScaleDot = 1;
+    let currentScaleHalo = 1;
     let frameId = 0;
 
     const render = () => {
       haloX += (pointerX - haloX) * 0.16;
       haloY += (pointerY - haloY) * 0.16;
 
-      dot.style.transform = `translate3d(${pointerX - 4}px, ${pointerY - 4}px, 0)`;
-      halo.style.transform = `translate3d(${haloX - 15}px, ${haloY - 15}px, 0)`;
+      currentScaleDot += (targetScaleDot - currentScaleDot) * 0.16;
+      currentScaleHalo += (targetScaleHalo - currentScaleHalo) * 0.16;
+
+      dot.style.transform = `translate3d(${pointerX - 4}px, ${pointerY - 4}px, 0) scale(${currentScaleDot})`;
+      halo.style.transform = `translate3d(${haloX - 15}px, ${haloY - 15}px, 0) scale(${currentScaleHalo})`;
       frameId = window.requestAnimationFrame(render);
     };
 
@@ -45,9 +52,9 @@ export function CustomCursor() {
     };
 
     const setActiveState = (active: boolean) => {
-      halo.style.scale = active ? "1.45" : "1";
+      targetScaleHalo = active ? 1.45 : 1;
+      targetScaleDot = active ? 1.2 : 1;
       halo.style.opacity = active ? "0.95" : "1";
-      dot.style.scale = active ? "1.2" : "1";
     };
 
     const handleHover = (event: Event) => {
