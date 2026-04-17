@@ -70,6 +70,12 @@ const products = [
     accent: "Boxes, inserts, branded pack-ins, premium presentation.",
     type: "kit",
   },
+  {
+    name: "Varsity",
+    detail: "Premium wool/leather blends for core team identity.",
+    accent: "Chenille patches, embroidery, custom snaps.",
+    type: "varsity",
+  },
 ];
 
 const steps = [
@@ -195,11 +201,11 @@ function SectionTag({ children }: { children: ReactNode }) {
 
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="brutal-panel-dark bg-black px-4 py-4">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-muted">
+    <div className="brutal-panel-dark bg-black px-4 py-4 text-white">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-white/60">
         {label}
       </p>
-      <p className="mt-2 font-display text-2xl font-black uppercase md:text-3xl">
+      <p className="mt-2 font-display text-2xl font-black uppercase md:text-3xl text-white">
         {value}
       </p>
     </div>
@@ -353,11 +359,15 @@ function ProductTile({
       transition={{ duration: 0.2, ease: "easeOut" }}
       className="group brutal-panel relative overflow-hidden bg-white p-6 text-black [transform-style:preserve-3d]"
     >
-      <div className="absolute top-0 right-0 h-12 w-12 border-l-[4px] border-b-[4px] border-black bg-red-500" />
-      <div className="flex min-h-[152px] items-center justify-center border-[3px] border-black bg-neutral-100 text-black/55 transition-colors duration-200 group-hover:bg-red-500 group-hover:text-white">
-        <div className="transition duration-200 group-hover:scale-105">
-          <ProductGlyph type={type} />
-        </div>
+      <div className="absolute top-0 right-0 z-10 h-10 w-10 border-l-[3px] border-b-[3px] border-black bg-red-500 mix-blend-normal" />
+      <div className="relative aspect-square w-full overflow-hidden border-[3px] border-black bg-neutral-100">
+        <Image
+          src={`/products/${type}.png`}
+          alt={name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0"
+        />
       </div>
       <h3 className="mt-5 font-display text-3xl font-black uppercase leading-none">
         {name}

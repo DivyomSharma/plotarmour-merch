@@ -153,7 +153,6 @@ html[data-theme="light"] .logo-light {
   opacity: 0;
   transition:
     opacity 160ms ease-out,
-    transform 160ms ease-out,
     scale 160ms ease-out;
 }
 
