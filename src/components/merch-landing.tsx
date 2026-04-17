@@ -11,6 +11,8 @@ import { MagneticButton } from "@/components/magnetic-button";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TypeHeadline } from "@/components/type-headline";
+import { InteractiveRedElement } from "@/components/interactive-red-element";
+import { MarqueeBanner } from "@/components/marquee-banner";
 
 const audiences = [
   {
@@ -543,11 +545,7 @@ export function MerchLanding() {
           >
             MERCH BULK SWAG DROP
           </motion.div>
-          <motion.div
-            style={{ y: accentY }}
-            className="absolute top-12 right-[8%] hidden h-32 w-32 border-[4px] border-foreground bg-red-500/85 lg:block"
-            aria-hidden="true"
-          />
+          <InteractiveRedElement y={accentY} />
           <div className="mx-auto grid min-h-[calc(100svh-84px)] max-w-7xl items-center gap-10 px-4 py-12 md:px-6 md:py-16">
             <ScrollReveal className="relative z-10 max-w-5xl">
               <SectionTag>Bulk merch for teams that want edge</SectionTag>
@@ -587,6 +585,8 @@ export function MerchLanding() {
             <StatChip label="Lead Flow" value="Quote in 24h" />
           </div>
         </section>
+
+        <MarqueeBanner />
 
         <section
           id="audiences"
