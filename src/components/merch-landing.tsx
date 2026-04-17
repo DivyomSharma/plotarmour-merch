@@ -1,22 +1,16 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ReactNode } from "react";
 import { buildWhatsAppLink } from "@/lib/contact";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
+import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { LeadForm } from "@/components/lead-form";
 import { MagneticButton } from "@/components/magnetic-button";
 import { ScrollReveal } from "@/components/scroll-reveal";
-
-const HeroScene = dynamic(() => import("@/components/hero-scene"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full min-h-[360px] items-center justify-center bg-white">
-      <div className="h-36 w-36 animate-pulse border-[4px] border-black bg-red-500" />
-    </div>
-  ),
-});
+import { ThemeToggle } from "@/components/theme-toggle";
+import { TypeHeadline } from "@/components/type-headline";
 
 const audiences = [
   {
@@ -145,7 +139,7 @@ const testimonials = [
 const packages = [
   {
     name: "Starter",
-    range: "50-100 units",
+    range: "30-100 units",
     detail:
       "For small teams, committee runs, farewell merch, and focused launches.",
   },
@@ -163,9 +157,37 @@ const packages = [
   },
 ];
 
+function BrandLogo() {
+  return (
+    <span className="flex items-center gap-3">
+      <span className="relative block w-[156px] sm:w-[182px]">
+        <Image
+          src="/brand/plotarmour-logo-white.png"
+          alt="PlotArmour"
+          width={2000}
+          height={400}
+          priority
+          className="logo-dark h-auto w-full"
+        />
+        <Image
+          src="/brand/plotarmour-logo-black.png"
+          alt="PlotArmour"
+          width={1949}
+          height={356}
+          priority
+          className="logo-light h-auto w-full"
+        />
+      </span>
+      <span className="hidden border-[3px] border-foreground px-2 py-1 text-[10px] font-black uppercase tracking-[0.2em] sm:inline-flex">
+        Merch
+      </span>
+    </span>
+  );
+}
+
 function SectionTag({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex border-[3px] border-white bg-red-500 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white">
+    <span className="inline-flex border-[3px] border-foreground bg-red-500 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white">
       {children}
     </span>
   );
@@ -387,7 +409,7 @@ function ReasonCard({ copy }: { copy: string }) {
 
 function LogoBadge({ label }: { label: string }) {
   return (
-    <div className="border-[3px] border-white px-4 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-white/72">
+    <div className="border-[3px] border-foreground px-4 py-4 text-center text-sm font-black uppercase tracking-[0.2em] text-foreground/72">
       {label}
     </div>
   );
@@ -464,13 +486,10 @@ export function MerchLanding() {
     <div className="relative overflow-x-clip bg-background text-foreground">
       <FloatingWhatsApp />
 
-      <header className="sticky top-0 z-40 border-b-[4px] border-white bg-black/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b-[4px] border-foreground bg-background/90 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-6">
-          <a
-            href="#top"
-            className="font-display text-xl font-black uppercase tracking-[0.12em]"
-          >
-            PlotArmour Merch
+          <a href="#top" aria-label="PlotArmour Merch home">
+            <BrandLogo />
           </a>
           <nav className="hidden items-center gap-5 text-xs font-black uppercase tracking-[0.16em] md:flex">
             <a href="#audiences" className="hover:text-red-500">
@@ -486,34 +505,38 @@ export function MerchLanding() {
               Proof
             </a>
           </nav>
-          <MagneticButton href="#lead-form" className="hidden md:inline-flex">
-            Get Quote
-          </MagneticButton>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <MagneticButton href="#lead-form" className="hidden md:inline-flex">
+              Get Quote
+            </MagneticButton>
+          </div>
         </div>
       </header>
 
       <main>
         <section
           id="top"
-          className="hero-noise relative overflow-hidden border-b-[4px] border-white"
+          className="hero-noise relative overflow-hidden border-b-[4px] border-foreground"
         >
+          <HeroAtmosphere />
           <motion.div
             style={{ y: heroWordY }}
-            className="pointer-events-none absolute top-22 left-1/2 hidden -translate-x-1/2 whitespace-nowrap font-display text-[16vw] font-black uppercase leading-none text-white/[0.05] lg:block"
+            className="pointer-events-none absolute top-22 left-1/2 hidden -translate-x-1/2 whitespace-nowrap font-display text-[16vw] font-black uppercase leading-none text-foreground/6 lg:block"
             aria-hidden="true"
           >
             MERCH BULK SWAG DROP
           </motion.div>
           <motion.div
             style={{ y: accentY }}
-            className="absolute top-12 right-[8%] hidden h-36 w-36 border-[4px] border-white bg-red-500 lg:block"
+            className="absolute top-12 right-[8%] hidden h-32 w-32 border-[4px] border-foreground bg-red-500/85 lg:block"
             aria-hidden="true"
           />
-          <div className="mx-auto grid min-h-[calc(100svh-84px)] max-w-7xl items-center gap-10 px-4 py-12 md:px-6 md:py-16 lg:grid-cols-[1.1fr_0.9fr]">
-            <ScrollReveal className="relative z-10">
+          <div className="mx-auto grid min-h-[calc(100svh-84px)] max-w-7xl items-center gap-10 px-4 py-12 md:px-6 md:py-16">
+            <ScrollReveal className="relative z-10 max-w-5xl">
               <SectionTag>Bulk merch for teams that want edge</SectionTag>
               <h1 className="mt-6 max-w-4xl font-display text-5xl font-black uppercase leading-[0.92] sm:text-7xl xl:text-[6.25rem]">
-                Custom merch that doesn&apos;t look mid.
+                <TypeHeadline text={"CUSTOM MERCH\nTHAT DOESN'T LOOK MID."} />
               </h1>
               <p className="mt-6 max-w-2xl text-base font-semibold leading-7 text-muted md:text-lg">
                 For colleges, schools, startups, and brands. We design,
@@ -529,53 +552,29 @@ export function MerchLanding() {
                 </MagneticButton>
               </div>
               <div className="mt-10 flex flex-wrap gap-3">
-                <span className="border-[3px] border-white px-3 py-2 text-xs font-black uppercase tracking-[0.16em]">
+                <span className="border-[3px] border-foreground px-3 py-2 text-xs font-black uppercase tracking-[0.16em]">
                   Design to delivery
                 </span>
-                <span className="border-[3px] border-white px-3 py-2 text-xs font-black uppercase tracking-[0.16em]">
+                <span className="border-[3px] border-foreground px-3 py-2 text-xs font-black uppercase tracking-[0.16em]">
                   7-10 day turnaround
                 </span>
-                <span className="border-[3px] border-white px-3 py-2 text-xs font-black uppercase tracking-[0.16em]">
-                  MOQ from 50
+                <span className="border-[3px] border-foreground px-3 py-2 text-xs font-black uppercase tracking-[0.16em]">
+                  MOQ from 30
                 </span>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.12} className="relative">
-              <div className="brutal-panel relative overflow-hidden bg-white">
-                <div className="absolute top-4 left-4 z-10 border-[3px] border-black bg-red-500 px-3 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white">
-                  Lightweight 3D accent
-                </div>
-                <div className="grid-wires absolute inset-0 opacity-20" aria-hidden="true" />
-                <div className="h-[360px] w-full md:h-[520px]">
-                  <HeroScene />
-                </div>
-                <div className="border-t-[4px] border-black bg-white p-5 text-black">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-black/60">
-                    What we ship
-                  </p>
-                  <p className="mt-3 font-display text-3xl font-black uppercase leading-none">
-                    Drops, kits, gifts, uniforms, and event merch.
-                  </p>
-                  <p className="mt-4 max-w-md text-sm font-semibold leading-6 text-black/70">
-                    Streetwear energy up front. Vendor chaos removed in the
-                    backend.
-                  </p>
-                </div>
               </div>
             </ScrollReveal>
           </div>
 
-          <div className="mx-auto grid max-w-7xl gap-4 border-t-[4px] border-white px-4 py-8 md:grid-cols-3 md:px-6">
+          <div className="mx-auto grid max-w-7xl gap-4 border-t-[4px] border-foreground px-4 py-8 md:grid-cols-3 md:px-6">
             <StatChip label="Turnaround" value="7-10 Days" />
-            <StatChip label="MOQ" value="50+" />
+            <StatChip label="MOQ" value="30 Units" />
             <StatChip label="Lead Flow" value="Quote in 24h" />
           </div>
         </section>
 
         <section
           id="audiences"
-          className="section-shell border-b-[4px] border-white px-4 py-16 md:px-6 md:py-24"
+          className="section-shell border-b-[4px] border-foreground px-4 py-16 md:px-6 md:py-24"
         >
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
@@ -604,7 +603,7 @@ export function MerchLanding() {
 
         <section
           id="products"
-          className="section-shell border-b-[4px] border-white px-4 py-16 md:px-6 md:py-24"
+          className="section-shell border-b-[4px] border-foreground px-4 py-16 md:px-6 md:py-24"
         >
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
@@ -634,7 +633,7 @@ export function MerchLanding() {
 
         <section
           id="process"
-          className="section-shell border-b-[4px] border-white px-4 py-16 md:px-6 md:py-24"
+          className="section-shell border-b-[4px] border-foreground px-4 py-16 md:px-6 md:py-24"
         >
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
@@ -652,7 +651,7 @@ export function MerchLanding() {
           </div>
         </section>
 
-        <section className="section-shell border-b-[4px] border-white px-4 py-16 md:px-6 md:py-24">
+        <section className="section-shell border-b-[4px] border-foreground px-4 py-16 md:px-6 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
             <ScrollReveal>
               <SectionTag>Why us</SectionTag>
@@ -678,7 +677,7 @@ export function MerchLanding() {
 
         <section
           id="proof"
-          className="section-shell border-b-[4px] border-white px-4 py-16 md:px-6 md:py-24"
+          className="section-shell border-b-[4px] border-foreground px-4 py-16 md:px-6 md:py-24"
         >
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
@@ -706,7 +705,7 @@ export function MerchLanding() {
           </div>
         </section>
 
-        <section className="section-shell border-b-[4px] border-white px-4 py-16 md:px-6 md:py-24">
+        <section className="section-shell border-b-[4px] border-foreground px-4 py-16 md:px-6 md:py-24">
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
               <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -735,7 +734,7 @@ export function MerchLanding() {
 
         <section
           id="lead-form"
-          className="section-shell border-b-[4px] border-white bg-red-500 px-4 py-16 text-black md:px-6 md:py-24"
+          className="section-shell border-b-[4px] border-foreground bg-red-500 px-4 py-16 text-black md:px-6 md:py-24"
         >
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr]">
             <ScrollReveal>

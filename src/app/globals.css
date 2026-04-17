@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root {
+:root,
+html[data-theme="dark"] {
   --background: #000000;
   --foreground: #ffffff;
   --accent: #ff2323;
@@ -9,6 +10,23 @@
   --text-muted: #b7b7b7;
   --shadow-offset: 8px;
   --border-size: 4px;
+  --grid-line: rgba(255, 255, 255, 0.12);
+  --hero-grid-line: rgba(255, 255, 255, 0.04);
+  --cursor-halo: rgba(255, 35, 35, 0.18);
+}
+
+html[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #000000;
+  --accent: #ff2323;
+  --surface: #f3f3f3;
+  --surface-strong: #ffffff;
+  --text-muted: #4a4a4a;
+  --shadow-offset: 8px;
+  --border-size: 4px;
+  --grid-line: rgba(0, 0, 0, 0.12);
+  --hero-grid-line: rgba(0, 0, 0, 0.05);
+  --cursor-halo: rgba(255, 35, 35, 0.22);
 }
 
 @theme inline {
@@ -36,6 +54,9 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   min-height: 100vh;
   text-rendering: optimizeLegibility;
+  transition:
+    background-color 180ms ease-out,
+    color 180ms ease-out;
 }
 
 ::selection {
@@ -73,8 +94,8 @@ textarea {
 
 .grid-wires {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -83,10 +104,84 @@ textarea {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, var(--hero-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hero-grid-line) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
+}
+
+.logo-light {
+  display: none;
+}
+
+html[data-theme="light"] .logo-dark {
+  display: none;
+}
+
+html[data-theme="light"] .logo-light {
+  display: block;
+}
+
+.type-caret {
+  display: inline-block;
+  width: 0.1em;
+  margin-left: 0.08em;
+  background: currentColor;
+  vertical-align: -0.04em;
+  animation: cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.custom-cursor-dot,
+.custom-cursor-halo {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  opacity: 0;
+  transition:
+    opacity 160ms ease-out,
+    transform 160ms ease-out,
+    scale 160ms ease-out;
+}
+
+.custom-cursor-dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.custom-cursor-halo {
+  height: 30px;
+  width: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--cursor-halo);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+html[data-cursor="custom"] .custom-cursor-dot,
+html[data-cursor="custom"] .custom-cursor-halo {
+  opacity: 1;
+}
+
+@media (pointer: fine) {
+  html[data-cursor="custom"],
+  html[data-cursor="custom"] * {
+    cursor: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

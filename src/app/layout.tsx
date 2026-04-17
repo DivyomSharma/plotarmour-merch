@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { CustomCursor } from "@/components/custom-cursor";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
@@ -12,6 +13,25 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
+
+const themeInitScript = `
+(() => {
+  try {
+    const storageKey = "plotarmour-theme";
+    const storedTheme = window.localStorage.getItem(storageKey);
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : prefersDark
+          ? "dark"
+          : "light";
+    document.documentElement.dataset.theme = theme;
+  } catch (error) {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();
+`;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://merch.theplotarmour.store"),
@@ -46,9 +66,13 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${spaceGrotesk.variable} h-full scroll-smooth antialiased`}
+      data-theme="dark"
+      suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <SmoothScroll />
+        <CustomCursor />
         {children}
       </body>
     </html>

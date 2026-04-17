@@ -57,8 +57,8 @@ export function MagneticButton({
         onBlur={reset}
         className={`group relative inline-flex min-h-14 items-center justify-center border-[4px] px-5 py-3 text-sm font-black uppercase tracking-[0.18em] transition-colors duration-200 md:px-7 ${
           invert
-            ? "border-white bg-white text-black hover:bg-red-500 hover:text-white"
-            : "border-white bg-red-500 text-white hover:bg-white hover:text-black"
+            ? "border-foreground bg-background text-foreground hover:bg-red-500 hover:text-white"
+            : "border-foreground bg-red-500 text-white hover:bg-foreground hover:text-background"
         } ${className}`}
       >
         <motion.span
