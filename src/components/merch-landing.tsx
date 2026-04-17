@@ -512,16 +512,19 @@ export function MerchLanding() {
           </a>
           <nav className="hidden items-center gap-5 text-xs font-black uppercase tracking-[0.16em] md:flex">
             <a href="#audiences" className="hover:text-red-500">
-              Who It&apos;s For
+              Audience
             </a>
             <a href="#products" className="hover:text-red-500">
-              Products
+              Merch
             </a>
             <a href="#process" className="hover:text-red-500">
-              Process
+              System
+            </a>
+            <a href="#archive" className="hover:text-red-500">
+              Archive
             </a>
             <a href="#proof" className="hover:text-red-500">
-              Proof
+              Reputation
             </a>
           </nav>
           <div className="flex items-center gap-3">
@@ -692,10 +695,10 @@ export function MerchLanding() {
           </div>
         </section>
 
-        <section className="section-shell border-b-[4px] border-foreground py-16 md:py-24 overflow-hidden">
+        <section id="archive" className="section-shell border-b-[4px] border-foreground py-16 md:py-24 overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             <ScrollReveal>
-              <SectionTag>Our Work</SectionTag>
+              <SectionTag>Archive</SectionTag>
               <h2 className="mt-6 max-w-4xl font-display text-4xl font-black uppercase leading-[0.95] md:text-6xl">
                 We let the merch speak for itself.
               </h2>
@@ -712,7 +715,7 @@ export function MerchLanding() {
         >
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
-              <SectionTag>Social proof</SectionTag>
+              <SectionTag>Reputation</SectionTag>
               <h2 className="mt-6 font-display text-4xl font-black uppercase leading-[0.95] md:text-6xl">
                 Trusted by teams that hate generic merch.
               </h2>
