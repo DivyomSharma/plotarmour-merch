@@ -204,11 +204,11 @@ function SectionTag({ children }: { children: ReactNode }) {
 
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="brutal-panel-dark bg-black px-4 py-4 text-white">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-white/60">
+    <div className="brutal-panel-dark bg-foreground px-4 py-4 text-background">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-background/60">
         {label}
       </p>
-      <p className="mt-2 font-display text-2xl font-black uppercase md:text-3xl text-white">
+      <p className="mt-2 font-display text-2xl font-black uppercase md:text-3xl text-background">
         {value}
       </p>
     </div>
@@ -238,13 +238,13 @@ function AudienceCard({
             }
       }
       transition={{ duration: 0.24, ease: "easeOut" }}
-      className="brutal-panel min-h-full bg-white p-6 text-black"
+      className="brutal-panel min-h-full bg-background p-6 text-foreground"
     >
       <p className="text-xs font-black uppercase tracking-[0.18em]">Built for</p>
       <h3 className="mt-3 font-display text-2xl font-black uppercase leading-none">
         {title}
       </h3>
-      <p className="mt-4 text-sm font-semibold leading-6 text-black/75">
+      <p className="mt-4 text-sm font-semibold leading-6 text-foreground/75">
         {description}
       </p>
       <div className="mt-6 flex flex-wrap gap-2">
@@ -360,10 +360,10 @@ function ProductTile({
             }
       }
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="group brutal-panel relative overflow-hidden bg-white p-6 text-black [transform-style:preserve-3d]"
+      className="group brutal-panel relative overflow-hidden bg-background p-6 text-foreground [transform-style:preserve-3d]"
     >
-      <div className="absolute top-0 right-0 z-10 h-10 w-10 border-l-[3px] border-b-[3px] border-black bg-red-500 mix-blend-normal" />
-      <div className="relative aspect-square w-full overflow-hidden border-[3px] border-black bg-neutral-100">
+      <div className="absolute top-0 right-0 z-10 h-10 w-10 border-l-[3px] border-b-[3px] border-foreground bg-red-500 mix-blend-normal" />
+      <div className="relative aspect-square w-full overflow-hidden border-[3px] border-foreground bg-surface">
         <Image
           src={`/products/${type}.png`}
           alt={name}
@@ -375,8 +375,8 @@ function ProductTile({
       <h3 className="mt-5 font-display text-3xl font-black uppercase leading-none">
         {name}
       </h3>
-      <p className="mt-3 text-sm font-semibold leading-6 text-black/75">{detail}</p>
-      <p className="mt-4 border-t-[3px] border-black pt-4 text-[11px] font-black uppercase tracking-[0.16em]">
+      <p className="mt-3 text-sm font-semibold leading-6 text-foreground/75">{detail}</p>
+      <p className="mt-4 border-t-[3px] border-foreground pt-4 text-[11px] font-black uppercase tracking-[0.16em]">
         {accent}
       </p>
     </motion.article>
@@ -396,14 +396,14 @@ function ProcessStep({
 }) {
   return (
     <ScrollReveal delay={index * 0.08}>
-      <div className="brutal-panel h-full bg-black p-6 text-white">
+      <div className="brutal-panel h-full bg-foreground p-6 text-background">
         <p className="font-display text-5xl font-black text-red-500">
           {number}
         </p>
-        <h3 className="mt-5 font-display text-2xl font-black uppercase text-white">
+        <h3 className="mt-5 font-display text-2xl font-black uppercase text-background">
           {title}
         </h3>
-        <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-white/60">
+        <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-background/60">
           {description}
         </p>
       </div>
@@ -413,9 +413,9 @@ function ProcessStep({
 
 function ReasonCard({ copy }: { copy: string }) {
   return (
-    <div className="brutal-panel bg-white p-5 text-black">
+    <div className="brutal-panel bg-background p-5 text-foreground">
       <div className="flex items-start gap-4">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center border-[3px] border-black bg-red-500 font-display text-2xl font-black text-white">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center border-[3px] border-foreground bg-red-500 font-display text-2xl font-black text-white">
           +
         </span>
         <p className="text-base font-black uppercase leading-6">{copy}</p>
@@ -442,11 +442,11 @@ function TestimonialCard({
   role: string;
 }) {
   return (
-    <div className="brutal-panel bg-white p-6 text-black">
+    <div className="brutal-panel bg-background p-6 text-foreground">
       <p className="text-base font-semibold leading-7">{quote}</p>
-      <div className="mt-6 border-t-[3px] border-black pt-4">
+      <div className="mt-6 border-t-[3px] border-foreground pt-4">
         <p className="font-display text-xl font-black uppercase">{name}</p>
-        <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-black/60">
+        <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-foreground/60">
           {role}
         </p>
       </div>
@@ -464,18 +464,18 @@ function PackageCard({
   detail: string;
 }) {
   return (
-    <div className="brutal-panel bg-black p-6 text-white">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-white/60">
+    <div className="brutal-panel bg-foreground p-6 text-background">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-background/60">
         {range}
       </p>
-      <h3 className="mt-8 font-display text-4xl font-black uppercase text-white">
+      <h3 className="mt-8 font-display text-4xl font-black uppercase text-background">
         {name}
       </h3>
-      <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-white/60">
+      <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-background/60">
         {detail}
       </p>
       <div className="mt-6">
-        <MagneticButton href="#lead-form" className="w-full justify-center">
+        <MagneticButton href="#lead-form" className="w-full justify-center" invert>
           Get Quote
         </MagneticButton>
       </div>

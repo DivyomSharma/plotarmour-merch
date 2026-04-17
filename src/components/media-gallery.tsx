@@ -95,6 +95,8 @@ function MediaCard({ item }: { item: { type: string; src: string } }) {
 
 export function MediaGallery() {
   const shouldReduceMotion = useReducedMotion();
+  const track1 = [...row1, ...row2];
+  const track2 = [...row2, ...row1];
 
   return (
     <div className="flex flex-col gap-6 py-6 pb-2">
@@ -111,14 +113,14 @@ export function MediaGallery() {
           style={{ width: "fit-content" }}
         >
           {/* Duplicate map for infinite scroll effect */}
-          {[...row1, ...row1].map((item, i) => (
+          {[...track1, ...track1].map((item, i) => (
             <MediaCard key={i} item={item} />
           ))}
         </motion.div>
       </div>
 
       {/* Row 2: Right */}
-      <div className="relative flex w-full justify-end">
+      <div className="relative flex w-full">
         <motion.div
           animate={shouldReduceMotion ? undefined : { x: ["-50%", "0%"] }}
           transition={
@@ -130,7 +132,7 @@ export function MediaGallery() {
           style={{ width: "fit-content" }}
         >
           {/* Duplicate map for infinite scroll effect */}
-          {[...row2, ...row2].map((item, i) => (
+          {[...track2, ...track2].map((item, i) => (
             <MediaCard key={i} item={item} />
           ))}
         </motion.div>
