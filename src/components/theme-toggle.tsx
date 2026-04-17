@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { startTransition, useState } from "react";
+import { startTransition, useState, useEffect } from "react";
 
 type Theme = "light" | "dark";
 
@@ -23,6 +23,10 @@ export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>(() =>
     typeof window === "undefined" ? "dark" : resolveTheme(),
   );
+
+  useEffect(() => {
+    setTheme(resolveTheme());
+  }, []);
 
   const toggleTheme = () => {
     const nextTheme: Theme = theme === "dark" ? "light" : "dark";
