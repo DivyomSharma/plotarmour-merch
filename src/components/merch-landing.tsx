@@ -783,10 +783,7 @@ export function MerchLanding() {
                 production logic, and a bulk quote you can actually act on.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <MagneticButton
-                  href="#lead-form"
-                  className="border-black bg-black text-white hover:bg-white hover:text-black"
-                >
+                <MagneticButton href="#lead-form">
                   Get Quote
                 </MagneticButton>
                 <MagneticButton
@@ -794,7 +791,6 @@ export function MerchLanding() {
                   target="_blank"
                   rel="noreferrer"
                   invert
-                  className="border-black bg-white text-black hover:bg-black hover:text-white"
                 >
                   WhatsApp Us
                 </MagneticButton>
