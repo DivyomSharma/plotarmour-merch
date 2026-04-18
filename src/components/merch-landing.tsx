@@ -551,15 +551,14 @@ export function MerchLanding() {
           </motion.div>
           <InteractiveRedElement y={accentY} />
           <div className="mx-auto grid min-h-[calc(100svh-84px)] max-w-7xl items-center gap-10 px-4 py-12 md:px-6 md:py-16">
-            <ScrollReveal className="relative z-10 max-w-5xl">
+            <div className="relative z-10 max-w-5xl animate-hero-fade">
               <SectionTag>Bulk merch for teams that want edge</SectionTag>
               <h1 className="mt-6 max-w-4xl font-display text-5xl font-black uppercase leading-[0.92] sm:text-7xl xl:text-[6.25rem]">
-                <TypeHeadline text={"CUSTOM MERCH\nTHAT DOESN'T LOOK MID."} />
+                Custom merch that doesn&apos;t look mid.
               </h1>
-              <p className="mt-6 max-w-2xl text-base font-semibold leading-7 text-muted md:text-lg">
-                For colleges, schools, startups, and brands. We design,
-                manufacture, and deliver bulk merch plus swag kits that feel
-                premium, sharp, and built to be worn.
+              <p className="mt-8 max-w-2xl text-lg font-bold leading-8 text-foreground/80 md:text-xl md:leading-9">
+                We design, manufacture, and deliver bulk merch and corporate
+                gifting that people actually want to wear.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <MagneticButton href="#lead-form">
@@ -580,7 +579,7 @@ export function MerchLanding() {
                   MOQ from 30
                 </span>
               </div>
-            </ScrollReveal>
+            </div>
           </div>
 
           <div className="mx-auto grid max-w-7xl gap-4 border-t-[4px] border-foreground px-4 py-8 md:grid-cols-3 md:px-6">

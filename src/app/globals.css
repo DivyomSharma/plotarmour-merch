@@ -54,9 +54,6 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   min-height: 100vh;
   text-rendering: optimizeLegibility;
-  transition:
-    background-color 180ms ease-out,
-    color 180ms ease-out;
 }
 
 ::selection {
@@ -192,4 +189,12 @@ html[data-cursor="custom"] .custom-cursor-halo {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-hero-fade {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
