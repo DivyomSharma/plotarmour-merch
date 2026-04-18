@@ -529,7 +529,7 @@ export function MerchLanding() {
           </nav>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <MagneticButton href="#lead-form" className="hidden md:inline-flex">
+            <MagneticButton href="#lead-form" className="hidden md:inline-flex !min-h-12 !h-12 !py-0 !px-5 !text-xs">
               Get Quote
             </MagneticButton>
           </div>
