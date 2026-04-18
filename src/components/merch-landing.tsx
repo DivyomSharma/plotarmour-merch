@@ -204,11 +204,11 @@ function SectionTag({ children }: { children: ReactNode }) {
 
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="brutal-panel-dark bg-foreground px-4 py-4 text-background">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-background/60">
+    <div className="brutal-panel bg-background px-4 py-4 text-foreground">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-foreground/60">
         {label}
       </p>
-      <p className="mt-2 font-display text-2xl font-black uppercase md:text-3xl text-background">
+      <p className="mt-2 font-display text-2xl font-black uppercase md:text-3xl text-foreground">
         {value}
       </p>
     </div>
@@ -396,14 +396,14 @@ function ProcessStep({
 }) {
   return (
     <ScrollReveal delay={index * 0.08}>
-      <div className="brutal-panel h-full bg-foreground p-6 text-background">
+      <div className="brutal-panel h-full bg-surface p-6 text-foreground">
         <p className="font-display text-5xl font-black text-red-500">
           {number}
         </p>
-        <h3 className="mt-5 font-display text-2xl font-black uppercase text-background">
+        <h3 className="mt-5 font-display text-2xl font-black uppercase text-foreground">
           {title}
         </h3>
-        <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-background/60">
+        <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-foreground/60">
           {description}
         </p>
       </div>
@@ -464,14 +464,14 @@ function PackageCard({
   detail: string;
 }) {
   return (
-    <div className="brutal-panel bg-foreground p-6 text-background">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-background/60">
+    <div className="brutal-panel bg-background p-6 text-foreground">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-foreground/60">
         {range}
       </p>
-      <h3 className="mt-8 font-display text-4xl font-black uppercase text-background">
+      <h3 className="mt-8 font-display text-4xl font-black uppercase text-foreground">
         {name}
       </h3>
-      <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-background/60">
+      <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-foreground/60">
         {detail}
       </p>
       <div className="mt-6">
@@ -685,7 +685,7 @@ export function MerchLanding() {
               </p>
             </ScrollReveal>
 
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid gap-5 grid-cols-1">
               {reasons.map((reason, index) => (
                 <ScrollReveal key={reason} delay={index * 0.06}>
                   <ReasonCard copy={reason} />
