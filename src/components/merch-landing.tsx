@@ -133,12 +133,7 @@ const packages = [
   },
 ];
 
-const trustMarks = [
-  "Design to delivery",
-  "Low MOQ from 30",
-  "Premium packaging",
-  "Campus and corporate ready",
-];
+const trustMarks = ["Design to delivery", "Low MOQ from 30", "Premium packaging", "Pan-India dispatch"];
 
 function BrandLogo() {
   return (
@@ -316,97 +311,10 @@ function PackageCard({
   );
 }
 
-function HeroShowcase() {
-  const shouldReduceMotion = useReducedMotion();
-
-  return (
-    <div className="relative mx-auto h-[360px] w-full max-w-[320px] sm:h-[440px] sm:max-w-[380px] lg:h-[500px] lg:max-w-[460px] xl:h-[560px] xl:max-w-[520px]">
-      <motion.div
-        className="surface-panel absolute top-[12%] right-0 h-[72%] w-[72%] rounded-[28px] p-3 sm:rounded-[32px] sm:p-4"
-        animate={shouldReduceMotion ? undefined : { y: [0, -10, 0] }}
-        transition={{ duration: 11, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-      >
-        <div className="relative h-full overflow-hidden rounded-[22px] bg-surface-elevated sm:rounded-[28px]">
-          <Image
-            src="/products/kit.png"
-            alt="Swag kit sample"
-            fill
-            sizes="(max-width: 1200px) 90vw, 520px"
-            className="object-cover"
-          />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent px-4 py-4 text-white sm:px-5 sm:py-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">
-              Signature kits
-            </p>
-            <p className="mt-2 font-display text-[1.05rem] font-semibold tracking-[-0.04em] sm:text-[1.2rem] xl:text-[1.35rem]">
-              Apparel, packaging, and inserts in one controlled system.
-            </p>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="surface-card absolute top-0 left-0 w-[42%] rounded-[22px] p-2.5 sm:rounded-[28px] sm:p-3"
-        animate={shouldReduceMotion ? undefined : { y: [0, 8, 0] }}
-        transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-      >
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-surface sm:rounded-[22px]">
-          <Image
-            src="/products/hoodie.png"
-            alt="Hoodie sample"
-            fill
-            sizes="240px"
-            className="object-cover"
-          />
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="surface-card absolute bottom-[2%] left-[10%] w-[34%] rounded-[22px] p-2.5 sm:rounded-[28px] sm:p-3"
-        animate={shouldReduceMotion ? undefined : { y: [0, -8, 0] }}
-        transition={{ duration: 13, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-      >
-        <div className="relative aspect-square overflow-hidden rounded-[18px] bg-surface sm:rounded-[22px]">
-          <Image
-            src="/products/bottle.png"
-            alt="Bottle sample"
-            fill
-            sizes="200px"
-            className="object-cover"
-          />
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="surface-card absolute top-[18%] left-[20%] hidden max-w-[220px] rounded-[24px] px-4 py-4 xl:block"
-        animate={shouldReduceMotion ? undefined : { y: [0, -6, 0] }}
-        transition={{ duration: 9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-      >
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-          What buyers care about
-        </p>
-        <div className="mt-3 space-y-2">
-          {trustMarks.map((mark) => (
-            <div key={mark} className="flex items-center gap-3 text-sm text-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              <span>{mark}</span>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      <div className="surface-card absolute right-[3%] bottom-[6%] rounded-full px-4 py-2 text-xs text-text-soft xl:hidden">
-        MOQ from 30
-      </div>
-    </div>
-  );
-}
-
 export function MerchLanding() {
   const shouldReduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const wordY = useTransform(scrollYProgress, [0, 0.2], [0, shouldReduceMotion ? 0 : -50]);
-  const mediaY = useTransform(scrollYProgress, [0, 0.24], [0, shouldReduceMotion ? 0 : 36]);
 
   const quickWhatsAppLink = buildWhatsAppLink(
     "Hi PlotArmour Merch, we want a quote for bulk merch.",
@@ -458,8 +366,8 @@ export function MerchLanding() {
             PLOTARMOUR MERCH
           </motion.div>
 
-          <div className="mx-auto grid min-h-[calc(100svh-81px)] max-w-7xl items-center gap-14 px-4 py-14 md:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:py-18">
-            <ScrollReveal className="relative z-10 max-w-3xl">
+          <div className="mx-auto flex min-h-[calc(100svh-81px)] max-w-7xl items-center justify-center px-4 py-14 md:px-6 lg:py-18">
+            <ScrollReveal className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
               <SectionEyebrow>Bulk merch and gifting, handled end to end</SectionEyebrow>
               <h1 className="mt-7 font-display text-[3rem] font-semibold leading-[0.92] tracking-[-0.08em] text-foreground sm:text-[4.5rem] xl:text-[5.75rem]">
                 Premium merch and gifting for teams that care how they show up.
@@ -488,10 +396,6 @@ export function MerchLanding() {
                 ))}
               </div>
             </ScrollReveal>
-
-            <motion.div style={{ y: mediaY }} className="relative z-10 justify-self-center lg:justify-self-end">
-              <HeroShowcase />
-            </motion.div>
           </div>
         </section>
 
