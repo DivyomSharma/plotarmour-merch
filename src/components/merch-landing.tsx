@@ -320,13 +320,13 @@ function HeroShowcase() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="relative h-[560px] w-full max-w-[520px]">
+    <div className="relative mx-auto h-[360px] w-full max-w-[320px] sm:h-[440px] sm:max-w-[380px] lg:h-[500px] lg:max-w-[460px] xl:h-[560px] xl:max-w-[520px]">
       <motion.div
-        className="surface-panel absolute inset-y-16 right-0 w-[70%] rounded-[36px] p-4"
+        className="surface-panel absolute top-[12%] right-0 h-[72%] w-[72%] rounded-[28px] p-3 sm:rounded-[32px] sm:p-4"
         animate={shouldReduceMotion ? undefined : { y: [0, -10, 0] }}
         transition={{ duration: 11, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
-        <div className="relative h-full overflow-hidden rounded-[28px] bg-surface-elevated">
+        <div className="relative h-full overflow-hidden rounded-[22px] bg-surface-elevated sm:rounded-[28px]">
           <Image
             src="/products/kit.png"
             alt="Swag kit sample"
@@ -334,11 +334,11 @@ function HeroShowcase() {
             sizes="(max-width: 1200px) 90vw, 520px"
             className="object-cover"
           />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent px-5 py-5 text-white">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent px-4 py-4 text-white sm:px-5 sm:py-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">
               Signature kits
             </p>
-            <p className="mt-2 font-display text-[1.35rem] font-semibold tracking-[-0.04em]">
+            <p className="mt-2 font-display text-[1.05rem] font-semibold tracking-[-0.04em] sm:text-[1.2rem] xl:text-[1.35rem]">
               Apparel, packaging, and inserts in one controlled system.
             </p>
           </div>
@@ -346,11 +346,11 @@ function HeroShowcase() {
       </motion.div>
 
       <motion.div
-        className="surface-card absolute top-0 left-0 w-[42%] rounded-[28px] p-3"
+        className="surface-card absolute top-0 left-0 w-[42%] rounded-[22px] p-2.5 sm:rounded-[28px] sm:p-3"
         animate={shouldReduceMotion ? undefined : { y: [0, 8, 0] }}
         transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[22px] bg-surface">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-surface sm:rounded-[22px]">
           <Image
             src="/products/hoodie.png"
             alt="Hoodie sample"
@@ -362,11 +362,11 @@ function HeroShowcase() {
       </motion.div>
 
       <motion.div
-        className="surface-card absolute bottom-0 left-[8%] w-[34%] rounded-[28px] p-3"
+        className="surface-card absolute bottom-[2%] left-[10%] w-[34%] rounded-[22px] p-2.5 sm:rounded-[28px] sm:p-3"
         animate={shouldReduceMotion ? undefined : { y: [0, -8, 0] }}
         transition={{ duration: 13, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
-        <div className="relative aspect-square overflow-hidden rounded-[22px] bg-surface">
+        <div className="relative aspect-square overflow-hidden rounded-[18px] bg-surface sm:rounded-[22px]">
           <Image
             src="/products/bottle.png"
             alt="Bottle sample"
@@ -378,7 +378,7 @@ function HeroShowcase() {
       </motion.div>
 
       <motion.div
-        className="surface-card absolute top-[16%] left-[26%] rounded-[24px] px-5 py-4"
+        className="surface-card absolute top-[18%] left-[20%] hidden max-w-[220px] rounded-[24px] px-4 py-4 xl:block"
         animate={shouldReduceMotion ? undefined : { y: [0, -6, 0] }}
         transition={{ duration: 9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
@@ -394,6 +394,10 @@ function HeroShowcase() {
           ))}
         </div>
       </motion.div>
+
+      <div className="surface-card absolute right-[3%] bottom-[6%] rounded-full px-4 py-2 text-xs text-text-soft xl:hidden">
+        MOQ from 30
+      </div>
     </div>
   );
 }
@@ -448,7 +452,7 @@ export function MerchLanding() {
 
           <motion.div
             style={{ y: wordY }}
-            className="pointer-events-none absolute top-12 left-1/2 hidden -translate-x-1/2 whitespace-nowrap font-display text-[15vw] font-semibold tracking-[-0.08em] text-foreground/[0.04] lg:block"
+            className="pointer-events-none absolute top-10 left-1/2 hidden -translate-x-1/2 whitespace-nowrap font-display text-[12vw] font-semibold tracking-[-0.08em] text-foreground/[0.035] xl:block"
             aria-hidden="true"
           >
             PLOTARMOUR MERCH
