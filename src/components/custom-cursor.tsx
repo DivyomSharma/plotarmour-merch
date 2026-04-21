@@ -41,8 +41,8 @@ export function CustomCursor() {
       currentScaleDot += (targetScaleDot - currentScaleDot) * 0.16;
       currentScaleHalo += (targetScaleHalo - currentScaleHalo) * 0.16;
 
-      dot.style.transform = `translate3d(${pointerX - 4}px, ${pointerY - 4}px, 0) scale(${currentScaleDot})`;
-      halo.style.transform = `translate3d(${haloX - 15}px, ${haloY - 15}px, 0) scale(${currentScaleHalo})`;
+      dot.style.transform = `translate3d(${pointerX - 3}px, ${pointerY - 3}px, 0) scale(${currentScaleDot})`;
+      halo.style.transform = `translate3d(${haloX - 13}px, ${haloY - 13}px, 0) scale(${currentScaleHalo})`;
       frameId = window.requestAnimationFrame(render);
     };
 
@@ -52,9 +52,9 @@ export function CustomCursor() {
     };
 
     const setActiveState = (active: boolean) => {
-      targetScaleHalo = active ? 1.45 : 1;
-      targetScaleDot = active ? 1.2 : 1;
-      halo.style.opacity = active ? "0.95" : "1";
+      targetScaleHalo = active ? 1.3 : 1;
+      targetScaleDot = active ? 1.15 : 1;
+      halo.style.opacity = active ? "0.82" : "1";
     };
 
     const handleHover = (event: Event) => {

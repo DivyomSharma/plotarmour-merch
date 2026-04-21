@@ -45,25 +45,25 @@ export function LeadForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="brutal-panel-light relative space-y-4 bg-white p-5 text-black md:p-7"
+      className="surface-panel relative space-y-5 rounded-[28px] p-6 text-foreground md:p-8"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-display text-2xl font-black uppercase tracking-[0.12em]">
-            Get Quote
+          <p className="font-display text-2xl font-semibold tracking-[-0.04em]">
+            Start your quote
           </p>
-          <p className="mt-2 max-w-sm text-sm font-medium text-black/70">
-            Drop the brief. We reply with design direction, quantity logic, and
-            a bulk quote.
+          <p className="mt-2 max-w-sm text-sm leading-6 text-text-soft">
+            Share the brief and we&apos;ll come back with product direction,
+            quantities, and a clean commercial response.
           </p>
         </div>
-        <span className="border-[3px] border-black px-3 py-1 text-xs font-black uppercase tracking-[0.16em]">
+        <span className="rounded-full border border-[color:var(--border-strong)] px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-text-soft">
           24h
         </span>
       </div>
 
       <label className="block">
-        <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em]">
+        <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-text-soft">
           Name
         </span>
         <input
@@ -73,12 +73,12 @@ export function LeadForm() {
             setFormState((current) => ({ ...current, name: event.target.value }))
           }
           placeholder="Aman Singh"
-          className="w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-semibold outline-none placeholder:text-black/40 focus:bg-red-50"
+          className="w-full rounded-2xl border border-[color:var(--border)] bg-surface px-4 py-3 text-sm text-foreground outline-none placeholder:text-text-soft focus:border-accent"
         />
       </label>
 
       <label className="block">
-        <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em]">
+        <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-text-soft">
           Organization
         </span>
         <input
@@ -91,12 +91,12 @@ export function LeadForm() {
             }))
           }
           placeholder="Robotics Club / HR Team / Startup Name"
-          className="w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-semibold outline-none placeholder:text-black/40 focus:bg-red-50"
+          className="w-full rounded-2xl border border-[color:var(--border)] bg-surface px-4 py-3 text-sm text-foreground outline-none placeholder:text-text-soft focus:border-accent"
         />
       </label>
 
       <label className="block">
-        <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em]">
+        <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-text-soft">
           Requirement
         </span>
         <textarea
@@ -108,15 +108,15 @@ export function LeadForm() {
               requirement: event.target.value,
             }))
           }
-          placeholder="Fest hoodies + tees for core team. Need premium look, custom labels, and solid packaging."
+          placeholder="Onboarding kit with hoodie, tee, bottle, custom sleeve card, and premium packaging."
           rows={4}
-          className="w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-semibold outline-none placeholder:text-black/40 focus:bg-red-50"
+          className="w-full rounded-2xl border border-[color:var(--border)] bg-surface px-4 py-3 text-sm text-foreground outline-none placeholder:text-text-soft focus:border-accent"
         />
       </label>
 
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
-          <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em]">
+          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-text-soft">
             Quantity
           </span>
           <input
@@ -129,11 +129,11 @@ export function LeadForm() {
               }))
             }
             placeholder="150 units"
-            className="w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-semibold outline-none placeholder:text-black/40 focus:bg-red-50"
+            className="w-full rounded-2xl border border-[color:var(--border)] bg-surface px-4 py-3 text-sm text-foreground outline-none placeholder:text-text-soft focus:border-accent"
           />
         </label>
         <label className="block">
-          <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em]">
+          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-text-soft">
             Timeline
           </span>
           <input
@@ -146,22 +146,22 @@ export function LeadForm() {
               }))
             }
             placeholder="Needed in 10 days"
-            className="w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-semibold outline-none placeholder:text-black/40 focus:bg-red-50"
+            className="w-full rounded-2xl border border-[color:var(--border)] bg-surface px-4 py-3 text-sm text-foreground outline-none placeholder:text-text-soft focus:border-accent"
           />
         </label>
       </div>
 
       <button
         type="submit"
-        className="flex min-h-14 w-full items-center justify-center border-[4px] border-black bg-red-500 px-5 text-sm font-black uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:bg-black"
+        className="flex min-h-13 w-full items-center justify-center rounded-full border border-accent bg-accent px-5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-accent-strong"
       >
-        Send Brief
+        Send brief
       </button>
 
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-black/70">
+      <p className="text-xs leading-5 text-text-soft">
         {submitted
-          ? "Brief queued. Your details have been pushed into the contact flow."
-          : "No spam. Just merch direction, MOQ clarity, and a straight quote."}
+          ? "Brief received. Your details have been routed into the quote flow."
+          : "No spam. Just a clear response on product mix, MOQ, and turnaround."}
       </p>
     </form>
   );

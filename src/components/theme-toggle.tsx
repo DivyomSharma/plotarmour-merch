@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { startTransition, useState, useEffect } from "react";
+import { startTransition, useState } from "react";
 
 type Theme = "light" | "dark";
 
@@ -24,10 +24,6 @@ export function ThemeToggle() {
     typeof window === "undefined" ? "dark" : resolveTheme(),
   );
 
-  useEffect(() => {
-    setTheme(resolveTheme());
-  }, []);
-
   const toggleTheme = () => {
     const nextTheme: Theme = theme === "dark" ? "light" : "dark";
 
@@ -44,14 +40,13 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       whileTap={{ scale: 0.96 }}
       aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
-      className="inline-flex h-12 w-12 items-center justify-center border-[4px] border-foreground bg-background text-foreground transition-colors duration-200 hover:bg-red-500 hover:text-white"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-surface/80 text-foreground transition-colors duration-300 hover:border-accent hover:text-accent"
     >
       <motion.span
         key={theme}
-        initial={{ rotate: -24, scale: 0.75, opacity: 0 }}
+        initial={{ rotate: -16, scale: 0.82, opacity: 0 }}
         animate={{ rotate: 0, scale: 1, opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.35 }}
         className="block"
       >
         {isLight ? <MoonIcon /> : <SunIcon />}
@@ -63,12 +58,12 @@ export function ThemeToggle() {
 function SunIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none" aria-hidden="true">
-      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2.5" />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2.1" />
       <path
-        d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"
+        d="M12 2.5v2.8M12 18.7v2.8M4.93 4.93l1.98 1.98M17.09 17.09l1.98 1.98M2.5 12h2.8M18.7 12h2.8M4.93 19.07l1.98-1.98M17.09 6.91l1.98-1.98"
         stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="square"
+        strokeWidth="2.1"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -78,9 +73,9 @@ function MoonIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none" aria-hidden="true">
       <path
-        d="M18.5 14.5A7 7 0 0 1 9.5 5.5 8 8 0 1 0 18.5 14.5Z"
+        d="M18.4 14.4A7.2 7.2 0 0 1 9.6 5.6a8 8 0 1 0 8.8 8.8Z"
         stroke="currentColor"
-        strokeWidth="2.5"
+        strokeWidth="2.1"
         strokeLinejoin="round"
       />
     </svg>
