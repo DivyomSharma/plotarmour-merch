@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Major_Mono_Display, Space_Grotesk } from "next/font/google";
 import { CustomCursor } from "@/components/custom-cursor";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
@@ -12,6 +12,12 @@ const inter = Inter({
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
+});
+
+const majorMono = Major_Mono_Display({
+  variable: "--font-major-mono",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const themeInitScript = `
@@ -65,7 +71,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${majorMono.variable} h-full scroll-smooth antialiased`}
       data-theme="dark"
       suppressHydrationWarning
     >

@@ -137,25 +137,8 @@ const trustMarks = ["Design to delivery", "Low MOQ from 30", "Premium packaging"
 
 function BrandLogo() {
   return (
-    <span className="flex items-center gap-3">
-      <span className="relative block w-[148px] sm:w-[176px]">
-        <Image
-          src="/brand/plotarmour-logo-white.png"
-          alt="PlotArmour"
-          width={2000}
-          height={400}
-          priority
-          className="logo-dark h-auto w-full"
-        />
-        <Image
-          src="/brand/plotarmour-logo-black.png"
-          alt="PlotArmour"
-          width={1949}
-          height={356}
-          priority
-          className="logo-light h-auto w-full"
-        />
-      </span>
+    <span className="font-logo text-[1.48rem] font-normal leading-none tracking-[-0.1em] text-foreground sm:text-[1.72rem]">
+      PLOTarmr
     </span>
   );
 }

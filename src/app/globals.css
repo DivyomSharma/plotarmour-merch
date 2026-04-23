@@ -48,6 +48,7 @@ html[data-theme="light"] {
   --color-text-soft: var(--text-soft);
   --font-sans: var(--font-inter);
   --font-display: var(--font-space-grotesk);
+  --font-logo: var(--font-major-mono);
 }
 
 * {
@@ -123,18 +124,6 @@ textarea {
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 24px 24px;
-}
-
-.logo-light {
-  display: none;
-}
-
-html[data-theme="light"] .logo-dark {
-  display: none;
-}
-
-html[data-theme="light"] .logo-light {
-  display: block;
 }
 
 .custom-cursor-dot,
