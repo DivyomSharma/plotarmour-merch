@@ -41,27 +41,68 @@ const audiences = [
   },
 ];
 
-const capabilities = [
+const categories = [
   {
-    title: "Apparel",
-    description: "Hoodies, tees, varsity jackets, caps, and custom trims.",
+    title: "T-Shirts",
+    image: "/products/tshirt.png",
+    products: [
+      "Couple T-Shirts", "Crop T-Shirts", "Plain T-shirt", "Oversized T-shirt", 
+      "Custom T-shirt", "Gym T-shirt", "Corporate T-shirt", 
+      "Sports T-shirt", "V Neck T-shirt", "Round Neck T-shirt", 
+      "Full Sleeve T-shirt", "Polo T-shirts", "Printed T-shirts"
+    ]
+  },
+  {
+    title: "Hoodies & Sweatshirts",
     image: "/products/hoodie.png",
+    products: [
+      "Zipper Hoodies", "Non-Zipper Hoodies", "Oversized Hoodies", "Promotional Hoodies",
+      "Crewneck Sweatshirts", "Full Zip Sweatshirts", "Premium Sweatshirts", "Embroidered Sweatshirts"
+    ]
+  },
+  {
+    title: "Jackets",
+    image: "/products/varsity.png",
+    products: [
+      "Varsity Jackets", "Reflective Jackets", "Safety Jackets", "Fleece Jackets", 
+      "Corporate Jackets", "Nehru Jackets", "Lab Coat Uniform"
+    ]
+  },
+  {
+    title: "Caps & Headwear",
+    image: "/products/cap.png",
+    products: [
+      "Customised Caps", "Bucket Hats", "Summer Caps", "Headbands", "Visors", "Umpire Hats"
+    ]
   },
   {
     title: "Drinkware",
-    description: "Bottles and utility pieces that work for gifting and daily use.",
     image: "/products/bottle.png",
+    products: [
+      "Water Bottles", "Travel Mugs", "Customised Mugs", "Tumblers", "Sports Bottles", "Coasters", "Bottle Openers"
+    ]
   },
   {
-    title: "Swag Kits",
-    description: "Multi-item gift kits with sleeves, inserts, packaging, and dispatch planning.",
+    title: "Bags & Kits",
     image: "/products/kit.png",
+    products: [
+      "Tote Bags", "Drawstring Bags", "Backpacks", "Duffle & Gym Bags", "Laptop Bags", "Jute Bags", "Messenger Bags"
+    ]
   },
   {
-    title: "Headwear",
-    description: "Caps and crew accessories for teams, outdoor activations, and event staff.",
-    image: "/products/cap.png",
+    title: "Promo & Tech",
+    image: "/products/kit.png",
+    products: [
+      "Customised Diaries", "Pens", "Badges", "Lanyards", "Mouse Pads", "Pen Drives", "Power Banks", "Headphones"
+    ]
   },
+  {
+    title: "Uniforms & Tracksuits",
+    image: "/products/varsity.png",
+    products: [
+      "Corporate Uniforms", "Hospital Uniforms", "School Uniforms", "Men Tracksuit", "Women Tracksuit", "Cricket Tracksuits"
+    ]
+  }
 ];
 
 const process = [
@@ -184,30 +225,42 @@ function AudienceCard({
   );
 }
 
-function CapabilityCard({
+function CategoryCard({
   title,
-  description,
   image,
+  products,
 }: {
   title: string;
-  description: string;
   image: string;
+  products: string[];
 }) {
   return (
-    <div className="surface-card rounded-[30px] p-5">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[24px] bg-surface">
+    <div className="surface-card group relative overflow-hidden rounded-[30px] p-5 transition-all hover:border-[color:var(--border-strong)]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[24px] bg-surface">
         <Image
           src={image}
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          className="object-cover"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       </div>
       <h3 className="mt-5 font-display text-[1.5rem] font-semibold tracking-[-0.05em] text-foreground">
         {title}
       </h3>
-      <p className="mt-3 text-sm leading-7 text-text-soft">{description}</p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {products.slice(0, 6).map((product) => (
+          <span key={product} className="rounded-full border border-[color:var(--border)] bg-surface-soft px-3 py-1 text-[11px] text-text-soft transition-colors group-hover:border-[color:var(--border-strong)] group-hover:text-foreground">
+            {product}
+          </span>
+        ))}
+        {products.length > 6 && (
+          <span className="rounded-full border border-transparent px-2 py-1 text-[11px] font-medium text-accent">
+            +{products.length - 6} more
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -444,9 +497,9 @@ export function MerchLanding() {
             </ScrollReveal>
 
             <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              {capabilities.map((capability, index) => (
-                <ScrollReveal key={capability.title} delay={index * 0.05}>
-                  <CapabilityCard {...capability} />
+              {categories.map((category, index) => (
+                <ScrollReveal key={category.title} delay={index * 0.05}>
+                  <CategoryCard {...category} />
                 </ScrollReveal>
               ))}
             </div>
