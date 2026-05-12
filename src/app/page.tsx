@@ -1,5 +1,5 @@
-const siteUrl = "https://merch.theplotarmour.store";
-const merchEmail = "merch@theplotarmour.store";
+const siteUrl = "https://merch.theplotarmour.xyz";
+const merchEmail = "merch@theplotarmour.xyz";
 
 const structuredData = {
   "@context": "https://schema.org",

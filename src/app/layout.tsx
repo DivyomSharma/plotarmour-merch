@@ -4,7 +4,7 @@ import { CustomCursor } from "@/components/custom-cursor";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
-const siteUrl = "https://merch.theplotarmour.store";
+const siteUrl = "https://merch.theplotarmour.xyz";
 const siteName = "PlotArmour Merch";
 const defaultTitle = "PlotArmour Merch | Bulk Merch & Corporate Gifting";
 const defaultDescription =
