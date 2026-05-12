@@ -4,6 +4,12 @@ import { CustomCursor } from "@/components/custom-cursor";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
+const siteUrl = "https://merch.theplotarmour.store";
+const siteName = "PlotArmour Merch";
+const defaultTitle = "PlotArmour Merch | Bulk Merch & Corporate Gifting";
+const defaultDescription =
+  "PlotArmour Merch designs, manufactures, and delivers bulk merch, swag kits, and corporate gifting for colleges, schools, startups, and corporate teams across India.";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -40,26 +46,68 @@ const themeInitScript = `
 `;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://merch.theplotarmour.store"),
-  title: "PlotArmour Merch | Bulk Merch & Corporate Gifting",
-  description:
-    "PlotArmour Merch designs, manufactures, and delivers bulk merch, swag kits, and corporate gifting for colleges, startups, schools, and teams.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: defaultTitle,
+    template: "%s | PlotArmour Merch",
+  },
+  description: defaultDescription,
+  applicationName: siteName,
+  referrer: "origin-when-cross-origin",
+  keywords: [
+    "bulk merch",
+    "custom merch",
+    "corporate gifting",
+    "swag kits",
+    "college fest merch",
+    "school farewell hoodies",
+    "startup team merch",
+    "corporate swag",
+    "bulk t-shirts",
+    "custom hoodies",
+    "event merchandise",
+    "employee onboarding kits",
+    "India merch supplier",
+  ],
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  category: "Business",
   alternates: {
     canonical: "/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "PlotArmour Merch",
-    description:
-      "Custom merch that does not look mid. Bulk merch, swag kits, and gifting for college drops, school communities, startups, and corporates.",
-    url: "https://merch.theplotarmour.store",
-    siteName: "PlotArmour Merch",
+    title: defaultTitle,
+    description: defaultDescription,
+    url: siteUrl,
+    siteName,
+    locale: "en_IN",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "PlotArmour Merch premium bulk merch and gifting",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PlotArmour Merch",
-    description:
-      "Bulk merch and gifting for colleges, clubs, teams, and brands.",
+    title: defaultTitle,
+    description: defaultDescription,
+    images: ["/twitter-image"],
   },
 };
 
