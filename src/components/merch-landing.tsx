@@ -1,21 +1,20 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ReactNode } from "react";
 import { buildWhatsAppLink } from "@/lib/contact";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
-import { LeadForm } from "@/components/lead-form";
 import { MagneticButton } from "@/components/magnetic-button";
+import { ProductShowcase } from "@/components/product-showcase";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const stats = [
-  { label: "Turnaround", value: "7-10 days" },
-  { label: "MOQ", value: "30 units" },
-  { label: "Quote Window", value: "Within 24 hours" },
-  { label: "Delivery", value: "Pan-India" },
+  { label: "Live Styles", value: "21 SKUs" },
+  { label: "MOQ", value: "10 pcs" },
+  { label: "Fabric Range", value: "180-430 GSM" },
+  { label: "Quote Flow", value: "Within 24 hours" },
 ];
 
 const audiences = [
@@ -39,70 +38,6 @@ const audiences = [
     description:
       "Onboarding gifts, conference kits, team merchandise, and premium swag programs handled end to end.",
   },
-];
-
-const categories = [
-  {
-    title: "T-Shirts",
-    image: "/products/tshirt.png",
-    products: [
-      "Couple T-Shirts", "Crop T-Shirts", "Plain T-shirt", "Oversized T-shirt", 
-      "Custom T-shirt", "Gym T-shirt", "Corporate T-shirt", 
-      "Sports T-shirt", "V Neck T-shirt", "Round Neck T-shirt", 
-      "Full Sleeve T-shirt", "Polo T-shirts", "Printed T-shirts"
-    ]
-  },
-  {
-    title: "Hoodies & Sweatshirts",
-    image: "/products/hoodie.png",
-    products: [
-      "Zipper Hoodies", "Non-Zipper Hoodies", "Oversized Hoodies", "Promotional Hoodies",
-      "Crewneck Sweatshirts", "Full Zip Sweatshirts", "Premium Sweatshirts", "Embroidered Sweatshirts"
-    ]
-  },
-  {
-    title: "Jackets",
-    image: "/products/varsity.png",
-    products: [
-      "Varsity Jackets", "Reflective Jackets", "Safety Jackets", "Fleece Jackets", 
-      "Corporate Jackets", "Nehru Jackets", "Lab Coat Uniform"
-    ]
-  },
-  {
-    title: "Caps & Headwear",
-    image: "/products/cap.png",
-    products: [
-      "Customised Caps", "Bucket Hats", "Summer Caps", "Headbands", "Visors", "Umpire Hats"
-    ]
-  },
-  {
-    title: "Drinkware",
-    image: "/products/bottle.png",
-    products: [
-      "Water Bottles", "Travel Mugs", "Customised Mugs", "Tumblers", "Sports Bottles", "Coasters", "Bottle Openers"
-    ]
-  },
-  {
-    title: "Bags & Kits",
-    image: "/products/kit.png",
-    products: [
-      "Tote Bags", "Drawstring Bags", "Backpacks", "Duffle & Gym Bags", "Laptop Bags", "Jute Bags", "Messenger Bags"
-    ]
-  },
-  {
-    title: "Promo & Tech",
-    image: "/products/kit.png",
-    products: [
-      "Customised Diaries", "Pens", "Badges", "Lanyards", "Mouse Pads", "Pen Drives", "Power Banks", "Headphones"
-    ]
-  },
-  {
-    title: "Uniforms & Tracksuits",
-    image: "/products/varsity.png",
-    products: [
-      "Corporate Uniforms", "Hospital Uniforms", "School Uniforms", "Men Tracksuit", "Women Tracksuit", "Cricket Tracksuits"
-    ]
-  }
 ];
 
 const process = [
@@ -225,46 +160,6 @@ function AudienceCard({
   );
 }
 
-function CategoryCard({
-  title,
-  image,
-  products,
-}: {
-  title: string;
-  image: string;
-  products: string[];
-}) {
-  return (
-    <div className="surface-card group relative overflow-hidden rounded-[30px] p-5 transition-all hover:border-[color:var(--border-strong)]">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[24px] bg-surface">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      </div>
-      <h3 className="mt-5 font-display text-[1.5rem] font-semibold tracking-[-0.05em] text-foreground">
-        {title}
-      </h3>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {products.slice(0, 6).map((product) => (
-          <span key={product} className="rounded-full border border-[color:var(--border)] bg-surface-soft px-3 py-1 text-[11px] text-text-soft transition-colors group-hover:border-[color:var(--border-strong)] group-hover:text-foreground">
-            {product}
-          </span>
-        ))}
-        {products.length > 6 && (
-          <span className="rounded-full border border-transparent px-2 py-1 text-[11px] font-medium text-accent">
-            +{products.length - 6} more
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function ProcessCard({
   number,
   title,
@@ -339,8 +234,8 @@ function PackageCard({
       </h3>
       <p className="mt-4 text-sm leading-7 text-text-soft">{detail}</p>
       <div className="mt-8">
-        <MagneticButton href="#lead-form" className="w-full justify-center" invert>
-          Get a quote
+        <MagneticButton href="/order" className="w-full justify-center" invert>
+          Order Now
         </MagneticButton>
       </div>
     </div>
@@ -371,7 +266,7 @@ export function MerchLanding() {
               Who it&apos;s for
             </a>
             <a href="#products" className="transition-colors hover:text-foreground">
-              Categories
+              Catalogue
             </a>
             <a href="#process" className="transition-colors hover:text-foreground">
               Process
@@ -379,12 +274,15 @@ export function MerchLanding() {
             <a href="#proof" className="transition-colors hover:text-foreground">
               Proof
             </a>
+            <a href="/order" className="transition-colors hover:text-foreground">
+              Order Now
+            </a>
           </nav>
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <MagneticButton href="#lead-form" className="hidden md:inline-flex">
-              Get a quote
+            <MagneticButton href="/order" className="hidden md:inline-flex">
+              Order Now
             </MagneticButton>
           </div>
         </div>
@@ -411,13 +309,14 @@ export function MerchLanding() {
               <p className="mt-7 max-w-2xl text-base leading-8 text-text-soft md:text-lg">
                 PlotArmour designs, manufactures, and delivers bulk apparel, swag
                 kits, and corporate gifting for campuses, startups, and modern
-                teams that want the final output to feel considered.
+                teams that want the final output to feel considered. The public site
+                stays editorial; the operational flow begins only after you click Order Now.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <MagneticButton href="#lead-form">Get a quote in 24 hours</MagneticButton>
+                <MagneticButton href="/order">Order Now</MagneticButton>
                 <MagneticButton href="#products" invert>
-                  Browse categories
+                  Browse catalogue
                 </MagneticButton>
               </div>
 
@@ -458,9 +357,9 @@ export function MerchLanding() {
                   to feel well made.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-text-soft">
-                  This is a lead-generation site for serious bulk enquiries, so the
-                  structure is designed to answer the questions a buyer actually has:
-                  fit, quality, MOQ, speed, and delivery confidence.
+                  This is a serious B2B merchandise surface, so the structure is
+                  designed to answer the questions a buyer actually has: fit, quality,
+                  MOQ, speed, delivery confidence, and whether the backend process feels managed.
                 </p>
               </div>
             </ScrollReveal>
@@ -485,24 +384,18 @@ export function MerchLanding() {
                 <div className="max-w-3xl">
                   <SectionEyebrow>Capabilities</SectionEyebrow>
                   <h2 className="mt-6 font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                    Apparel, swag, and gifting categories presented with a cleaner B2B lens.
+                    Real products, real GSM bands, and source-backed visuals presented in a cleaner B2B format.
                   </h2>
                 </div>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
-                  We have kept the range broad, but the presentation restrained.
-                  The goal is to make category choice easier for teams placing
-                  structured bulk orders.
+                  Every visible product below maps to a live catalog reference.
+                  The goal is to let a buyer shortlist the exact base garment before
+                  the quote and workspace flow begins.
                 </p>
               </div>
             </ScrollReveal>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              {categories.map((category, index) => (
-                <ScrollReveal key={category.title} delay={index * 0.05}>
-                  <CategoryCard {...category} />
-                </ScrollReveal>
-              ))}
-            </div>
+            <ProductShowcase />
           </div>
         </section>
 
@@ -607,7 +500,7 @@ export function MerchLanding() {
                 </div>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
                   No pricing here by design. The range framing simply makes it easier
-                  for a buyer to understand where their requirement sits.
+                  for a buyer to understand where their requirement sits before entering the project flow.
                 </p>
               </div>
             </ScrollReveal>
@@ -622,22 +515,20 @@ export function MerchLanding() {
           </div>
         </section>
 
-        <section
-          id="lead-form"
-          className="section-shell px-4 py-16 md:px-6 md:py-24"
-        >
+        <section className="section-shell px-4 py-16 md:px-6 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
             <ScrollReveal>
-              <SectionEyebrow>Final CTA</SectionEyebrow>
+              <SectionEyebrow>Order Flow</SectionEyebrow>
               <h2 className="mt-6 max-w-2xl font-display text-[2.8rem] font-semibold leading-[0.96] tracking-[-0.07em] text-foreground md:text-[4.6rem]">
-                Ready to move from idea to quote?
+                Keep the landing page clean. Move the real work into the workspace.
               </h2>
               <p className="mt-6 max-w-xl text-base leading-8 text-text-soft">
-                Send the brief and we&apos;ll respond with the right product mix,
-                execution route, and a practical next step for your order size.
+                The public site should market the catalogue and premium positioning.
+                The operational stack lives behind Order Now: lead creation, discussion,
+                project workspace, quotation, approvals, payments, production, and dispatch.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <MagneticButton href="#lead-form">Get a quote</MagneticButton>
+                <MagneticButton href="/order">Order Now</MagneticButton>
                 <MagneticButton
                   href={quickWhatsAppLink}
                   target="_blank"
@@ -649,8 +540,24 @@ export function MerchLanding() {
               </div>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.1}>
-              <LeadForm />
+            <ScrollReveal delay={0.1} className="surface-panel rounded-[30px] p-6 md:p-8">
+              <div className="grid gap-4">
+                {[
+                  "Lead created from short form",
+                  "Internal sales discussion and qualification",
+                  "Project ID and secure client workspace",
+                  "Quotation preview, PDF, approvals, and revision history",
+                  "Advance payment, production specification, and sample approval",
+                  "Production, balance payment, dispatch, and timeline logging",
+                ].map((item, index) => (
+                  <div key={item} className="flex items-start gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-4">
+                    <span className="font-display text-xl text-accent">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p className="text-sm leading-7 text-text-soft">{item}</p>
+                  </div>
+                ))}
+              </div>
             </ScrollReveal>
           </div>
         </section>
