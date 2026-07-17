@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { WorkspaceShell } from "@/components/workspace-shell";
+import { OWNER_DASHBOARD_ID } from "@/lib/internal-routes";
 import { dashboardBuckets, mockProjects } from "@/lib/merch-data";
 
 const statusLabels = {
@@ -13,7 +15,17 @@ const statusLabels = {
   archived: "Archived",
 };
 
-export default function DashboardPage() {
+export default async function OwnerDashboardPage({
+  params,
+}: {
+  params: Promise<{ accessId: string }>;
+}) {
+  const { accessId } = await params;
+
+  if (accessId !== OWNER_DASHBOARD_ID) {
+    notFound();
+  }
+
   return (
     <WorkspaceShell
       eyebrow="Owner dashboard"

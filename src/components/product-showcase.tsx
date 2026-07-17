@@ -76,18 +76,18 @@ function ProductCard({ product }: { product: CatalogProduct }) {
         <div className="mt-6 grid gap-3 border-t fine-rule pt-5 md:grid-cols-2">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-              Source Bulk
+              Quote Range
             </p>
             <p className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground">
-              {product.bulkPrice}
+              {product.bulkPriceMarkedUp}
             </p>
           </div>
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-              Suggested Quote
+              Sample Basis
             </p>
             <p className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground">
-              {product.bulkPriceMarkedUp}
+              {product.samplePriceMarkedUp}
             </p>
           </div>
         </div>
@@ -96,14 +96,6 @@ function ProductCard({ product }: { product: CatalogProduct }) {
           <MagneticButton href="/order" className="min-w-[160px] justify-center">
             Order Now
           </MagneticButton>
-          <a
-            href={product.url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-12 items-center justify-center rounded-full border border-[color:var(--border-strong)] px-5 py-3 text-sm font-semibold tracking-[0.01em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent/8 md:px-6"
-          >
-            Source Reference
-          </a>
         </div>
       </div>
     </article>

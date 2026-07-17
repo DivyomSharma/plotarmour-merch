@@ -1,8 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import Link from "next/link";
-
 type LeadFormState = {
   name: string;
   phone: string;
@@ -192,16 +190,6 @@ export function LeadForm() {
           ? "Lead captured. Next step is sales discussion and project conversion."
           : "This intake creates a lead only. Quotation, approvals, payments, and production happen in the workspace."}
       </p>
-
-      {submitted ? (
-        <div className="rounded-[22px] border border-[color:var(--border-strong)] bg-surface px-4 py-4 text-sm text-text-soft">
-          Sample next step: open the owner workspace at{" "}
-          <Link href="/dashboard" className="text-foreground underline underline-offset-4">
-            dashboard
-          </Link>
-          .
-        </div>
-      ) : null}
     </form>
   );
 }

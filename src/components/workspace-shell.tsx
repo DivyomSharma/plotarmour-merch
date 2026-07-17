@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { getOwnerDashboardPath } from "@/lib/internal-routes";
 
 export function WorkspaceShell({
   eyebrow,
@@ -41,12 +42,14 @@ export function WorkspaceShell({
             >
               Order Now
             </Link>
-            <Link
-              href="/dashboard"
-              className="rounded-full border border-[color:var(--border-strong)] px-4 py-2 text-text-soft transition-colors hover:text-foreground"
-            >
-              Owner Dashboard
-            </Link>
+            {eyebrow === "Owner dashboard" ? (
+              <Link
+                href={getOwnerDashboardPath()}
+                className="rounded-full border border-[color:var(--border-strong)] px-4 py-2 text-text-soft transition-colors hover:text-foreground"
+              >
+                Internal View
+              </Link>
+            ) : null}
           </div>
         </div>
       </header>
