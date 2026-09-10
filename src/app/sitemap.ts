@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://merch.theplotarmour.xyz";
+const siteUrl = "https://merch.plotarmour.in";
 const lastModified = new Date("2026-05-12");
 
 export default function sitemap(): MetadataRoute.Sitemap {
