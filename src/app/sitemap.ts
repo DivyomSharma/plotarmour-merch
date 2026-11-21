@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { kits } from "@/lib/kits";
+import { catalogProducts } from "@/lib/product-catalog";
 
 const siteUrl = "https://merch.plotarmour.in";
 const lastModified = new Date("2026-05-12");
@@ -27,6 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...kits.map((kit) => ({
       url: `${siteUrl}/kits/${kit.slug}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...catalogProducts.map((product) => ({
+      url: `${siteUrl}/products/${product.slug}`,
       lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.7,

@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { MagneticButton } from "@/components/magnetic-button";
+import { ProductIndicativePrice } from "@/components/product-indicative-price";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import {
   catalogCategories,
@@ -83,34 +85,8 @@ function ProductCard({ product }: { product: CatalogProduct }) {
           ) : null}
         </div>
 
-        <div className="mt-6 border-t fine-rule pt-5">
-          <div className="grid gap-3 md:grid-cols-2">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-                Quote Range
-              </p>
-              <p
-                aria-label={`${product.bulkPriceMarkedUp} per unit; indicative, blank garment, excluding GST. Final price confirmed in quote.`}
-                className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground"
-              >
-                {product.bulkPriceMarkedUp}
-              </p>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-                Sample Basis
-              </p>
-              <p
-                aria-label={`${product.samplePriceMarkedUp} sample basis; indicative, blank garment, excluding GST. Final price confirmed in quote.`}
-                className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground"
-              >
-                {product.samplePriceMarkedUp}
-              </p>
-            </div>
-          </div>
-          <p className="mt-3 text-xs leading-5 text-text-soft">
-            Indicative, blank garment, ex-GST. Final price confirmed in quote.
-          </p>
+        <div className="mt-6">
+          <ProductIndicativePrice product={product} />
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
@@ -120,6 +96,12 @@ function ProductCard({ product }: { product: CatalogProduct }) {
           >
             Order Now
           </MagneticButton>
+          <Link
+            href={`/products/${product.slug}`}
+            className="inline-flex min-h-12 items-center justify-center rounded-full border border-[color:var(--border-strong)] px-5 py-3 text-sm font-semibold tracking-[0.01em] text-foreground transition-colors hover:border-accent hover:bg-accent/8 md:px-6"
+          >
+            View specs
+          </Link>
         </div>
       </div>
     </article>
