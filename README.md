@@ -20,6 +20,12 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Testing
+
+`npm test` runs the Vitest suite (lead validation, domain state machines, Prisma schema invariants). `npx prisma validate` checks the data model offline; set `DATABASE_URL` to the dummy value in `.env.example` for that command.
+
+On Windows, run `npm test` from PowerShell or cmd. In some Git Bash setups Vitest fails with `Cannot read properties of undefined (reading 'config')` and reports no tests; this is an environment quirk, not a test failure.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
