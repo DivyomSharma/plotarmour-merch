@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MagneticButton } from "@/components/magnetic-button";
+import { ProductEstimator } from "@/components/product-estimator";
 import { ProductIndicativePrice } from "@/components/product-indicative-price";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { buildWhatsAppLink } from "@/lib/contact";
@@ -177,6 +178,12 @@ export default async function ProductDetailPage({
               ))}
             </ol>
             <p className="mt-5 text-sm text-text-soft">MOQ: 10 pieces.</p>
+            <div className="mt-6 border-t fine-rule pt-6">
+              <ProductEstimator
+                productName={product.name}
+                unitPriceLabel={product.bulkPriceMarkedUp}
+              />
+            </div>
           </section>
 
           <section className="surface-card rounded-[30px] p-5 md:p-7">
