@@ -83,7 +83,7 @@ export function LeadForm({
     );
   const fieldError = (field: FieldName) =>
     errors[field] ? (
-      <p className="mt-2 text-xs text-accent" id={`${field}-error`}>
+      <p className="mt-2 text-xs text-accent-text" id={`${field}-error`}>
         {errors[field]}
       </p>
     ) : null;

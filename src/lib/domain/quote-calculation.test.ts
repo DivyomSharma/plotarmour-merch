@@ -10,14 +10,14 @@ import {
 
 const baseInput = {
   lines: [{ description: "T-shirt", quantity: MIN_ORDER_QUANTITY, unitAmount: 1_000 }],
-  sellerState: "Maharashtra",
-  placeOfSupplyState: "Maharashtra",
+  sellerStateCode: "27",
+  placeOfSupplyStateCode: "27",
   gstRateBp: 500,
   roundToRupee: false,
 };
 
 describe("calculateQuote", () => {
-  it("splits an odd intra-state tax exactly", () => {
+  it("uses CGST and SGST when state codes match, including an odd tax amount", () => {
     const result = calculateQuote({
       ...baseInput,
       lines: [{ description: "T-shirt", quantity: 10, unitAmount: 1 }],
@@ -28,7 +28,7 @@ describe("calculateQuote", () => {
   });
 
   it("uses IGST for inter-state supply", () => {
-    const result = calculateQuote({ ...baseInput, placeOfSupplyState: "Karnataka" });
+    const result = calculateQuote({ ...baseInput, placeOfSupplyStateCode: "29" });
 
     expect(result).toMatchObject({ cgst: 0, sgst: 0, igst: 500, total: 10_500 });
   });
@@ -103,14 +103,14 @@ describe("calculateQuote", () => {
     expect(result.manualReview).toEqual({ required: true, reasons: [reason] });
   });
 
-  it("matches states irrespective of case and surrounding whitespace", () => {
-    const result = calculateQuote({
-      ...baseInput,
-      sellerState: "  maharashtra ",
-      placeOfSupplyState: "MAHARASHTRA",
-    });
-    expect(result.igst).toBe(0);
-    expect(result.cgst + result.sgst).toBe(500);
+  it.each([
+    ["sellerStateCode", ""],
+    ["sellerStateCode", "Maharashtra"],
+    ["placeOfSupplyStateCode", "29 "],
+  ] as const)("rejects invalid %s %j", (field, stateCode) => {
+    expect(() =>
+      calculateQuote({ ...baseInput, [field]: stateCode }),
+    ).toThrow(QuoteCalculationError);
   });
 
   it("always assigns every paise of tax across GST components", () => {
@@ -128,7 +128,7 @@ describe("calculateQuote", () => {
       const result = calculateQuote({
         ...baseInput,
         lines: [{ description: "Generated", quantity, unitAmount }],
-        placeOfSupplyState: sameState ? "maharashtra" : "Tamil Nadu",
+        placeOfSupplyStateCode: sameState ? "27" : "33",
         gstRateBp,
       });
 

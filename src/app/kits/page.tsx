@@ -28,7 +28,7 @@ export default function KitsPage() {
             >
               <KitImage kit={kit} priority={index < 2} />
               <div className="flex flex-1 flex-col p-5 md:p-6">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
                   {kit.audience}
                 </p>
                 <h2 className="mt-3 font-display text-2xl font-semibold tracking-[-0.05em] text-foreground">
@@ -54,7 +54,7 @@ export default function KitsPage() {
               </p>
             </div>
             <div className="flex flex-1 flex-col p-5 md:p-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
                 Flexible starting point
               </p>
               <h2 className="mt-3 font-display text-2xl font-semibold tracking-[-0.05em] text-foreground">

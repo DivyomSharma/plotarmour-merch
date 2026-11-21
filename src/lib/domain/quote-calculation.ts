@@ -1,4 +1,5 @@
 import { MIN_ORDER_QUANTITY } from "@/lib/lead-validation";
+import { isValidGstStateCode } from "./gst";
 
 export const RUSH_THRESHOLD_DAYS = 14;
 const PAISE_PER_RUPEE = 100;
@@ -24,8 +25,8 @@ export type QuoteCalculationInput = {
     quantity: number;
     unitAmount: number;
   }>;
-  sellerState: string;
-  placeOfSupplyState: string;
+  sellerStateCode: string;
+  placeOfSupplyStateCode: string;
   gstRateBp: number;
   roundToRupee?: boolean;
   flags?: ManualReviewFlags;
@@ -109,8 +110,11 @@ export function calculateQuote(input: QuoteCalculationInput): QuoteCalculation {
   if (!input.lines.length) {
     throw new QuoteCalculationError("A quote needs at least one line.");
   }
-  if (!input.sellerState.trim() || !input.placeOfSupplyState.trim()) {
-    throw new QuoteCalculationError("Seller state and place-of-supply state are required.");
+  if (
+    !isValidGstStateCode(input.sellerStateCode) ||
+    !isValidGstStateCode(input.placeOfSupplyStateCode)
+  ) {
+    throw new QuoteCalculationError("Seller and place-of-supply state codes must be valid GST state codes.");
   }
   assertNonNegativeInteger(input.gstRateBp, "GST rate");
   if (input.gstRateBp > 2800) {
@@ -142,9 +146,7 @@ export function calculateQuote(input: QuoteCalculationInput): QuoteCalculation {
     assertSafeResult(taxableValue * input.gstRateBp, "Tax calculation"),
     BASIS_POINTS_PER_WHOLE,
   );
-  const sameState =
-    input.sellerState.trim().toLowerCase() ===
-    input.placeOfSupplyState.trim().toLowerCase();
+  const sameState = input.sellerStateCode === input.placeOfSupplyStateCode;
   const cgst = sameState ? Math.floor(tax / 2) : 0;
   const sgst = sameState ? tax - cgst : 0;
   const igst = sameState ? 0 : tax;

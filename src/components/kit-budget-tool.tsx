@@ -31,7 +31,7 @@ export function KitBudgetTool({ kit }: { kit: Kit }) {
       className="surface-panel rounded-[30px] p-5 md:p-7"
       aria-labelledby="budget-tool-title"
     >
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
         Planning tool
       </p>
       <h2

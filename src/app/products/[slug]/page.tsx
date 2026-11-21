@@ -99,7 +99,7 @@ export default async function ProductDetailPage({
 
           <div className="space-y-6">
             <section className="surface-card rounded-[30px] p-5 md:p-7">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
                 Product facts
               </p>
               <dl className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -155,7 +155,7 @@ export default async function ProductDetailPage({
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <section className="surface-card rounded-[30px] p-5 md:p-7">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
               Quantity bands
             </p>
             <ol className="mt-5 grid gap-3 sm:grid-cols-3">

@@ -6,6 +6,7 @@ html[data-theme="dark"] {
   --foreground: #f4f0e8;
   --accent: #a83a2c;
   --accent-strong: #c54a39;
+  --accent-text: #e5806f;
   --surface: #131316;
   --surface-elevated: #1a1a1f;
   --surface-soft: rgba(244, 240, 232, 0.05);
@@ -24,6 +25,7 @@ html[data-theme="light"] {
   --foreground: #171513;
   --accent: #a63a2d;
   --accent-strong: #bd4939;
+  --accent-text: #a63a2d;
   --surface: #fffcf7;
   --surface-elevated: #f1ece3;
   --surface-soft: rgba(23, 21, 19, 0.04);
@@ -42,6 +44,7 @@ html[data-theme="light"] {
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
+  --color-accent-text: var(--accent-text);
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
   --color-muted: var(--text-muted);

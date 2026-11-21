@@ -45,7 +45,7 @@ export default async function KitDetailPage({
           >
             <KitImage kit={kit} priority />
             <div className="p-5 md:p-7">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
                 For {kit.audience}
               </p>
               <h2 className="mt-3 font-display text-2xl font-semibold tracking-[-0.05em] text-foreground">
@@ -68,7 +68,7 @@ export default async function KitDetailPage({
           </section>
           <div className="space-y-6">
             <section className="surface-card rounded-[30px] p-5 md:p-7">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
                 Indicative planning range
               </p>
               <p className="mt-3 font-display text-3xl font-semibold tracking-[-0.05em] text-foreground">

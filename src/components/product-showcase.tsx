@@ -38,7 +38,7 @@ function ProductCard({ product }: { product: CatalogProduct }) {
       <div className="flex flex-1 flex-col p-5 md:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
               {product.code}
             </p>
             <h3 className="mt-3 font-display text-[1.5rem] font-semibold tracking-[-0.05em] text-foreground">

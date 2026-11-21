@@ -147,7 +147,7 @@ function AudienceCard({
 }) {
   return (
     <div className="surface-card rounded-[28px] p-6">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
         Built for
       </p>
       <h3 className="mt-4 font-display text-[1.7rem] font-semibold tracking-[-0.05em] text-foreground">
@@ -169,7 +169,7 @@ function ProcessCard({
 }) {
   return (
     <div className="surface-card rounded-[28px] p-6">
-      <p className="font-display text-[2.5rem] font-semibold tracking-[-0.06em] text-accent">
+      <p className="font-display text-[2.5rem] font-semibold tracking-[-0.06em] text-accent-text">
         {number}
       </p>
       <h3 className="mt-6 font-display text-[1.5rem] font-semibold tracking-[-0.05em] text-foreground">
@@ -207,7 +207,7 @@ function KitCard({
       href={`/kits/${slug}`}
       className="surface-card flex h-full flex-col rounded-[28px] p-6 transition-colors hover:border-[color:var(--border-strong)]"
     >
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
         {audience}
       </p>
       <h3 className="mt-4 font-display text-[1.5rem] font-semibold tracking-[-0.05em] text-foreground">
@@ -267,7 +267,7 @@ export function MerchLanding() {
 
       <header className="sticky top-0 z-40 border-b fine-rule bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-6">
-          <a href="#top" aria-label="PlotArmour Merch home">
+          <a href="#top" aria-label="PLOTarmr: PlotArmour Merch home">
             <BrandLogo />
           </a>
 
@@ -332,7 +332,10 @@ export function MerchLanding() {
           </motion.div>
 
           <div className="mx-auto flex min-h-[calc(100svh-81px)] max-w-7xl items-center justify-center px-4 py-14 md:px-6 lg:py-18">
-            <ScrollReveal className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
+            <ScrollReveal
+              eager
+              className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center"
+            >
               <SectionEyebrow>
                 Bulk merch and gifting, handled end to end
               </SectionEyebrow>
@@ -623,7 +626,7 @@ export function MerchLanding() {
                     key={item}
                     className="flex items-start gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-4"
                   >
-                    <span className="font-display text-xl text-accent">
+                    <span className="font-display text-xl text-accent-text">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <p className="text-sm leading-7 text-text-soft">{item}</p>
