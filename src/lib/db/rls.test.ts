@@ -4,11 +4,10 @@ import { resolve } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { readMigrationSql } from "@/lib/db/migrations";
+
 const schema = readFileSync(resolve(process.cwd(), "prisma/schema.prisma"), "utf8");
-const migration = readFileSync(
-  resolve(process.cwd(), "prisma/migrations/0001_init/migration.sql"),
-  "utf8",
-);
+const migrations = readMigrationSql();
 const policies = readFileSync(resolve(process.cwd(), "prisma/rls/policies.sql"), "utf8");
 
 const orgA = "00000000-0000-0000-0000-0000000000a1";
@@ -17,6 +16,8 @@ const userA = "00000000-0000-0000-0000-0000000000a2";
 const userB = "00000000-0000-0000-0000-0000000000b2";
 const staffUser = "00000000-0000-0000-0000-0000000000c1";
 const gatewayId = "00000000-0000-0000-0000-0000000000d1";
+const platformAuditId = "00000000-0000-0000-0000-0000000000d2";
+const platformOutboxId = "00000000-0000-0000-0000-0000000000d3";
 
 type CountRow = { count: number };
 type RlsRow = { relname: string; relrowsecurity: boolean };
@@ -109,10 +110,12 @@ beforeAll(async () => {
       SELECT nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
     $$;
   `);
-  await db.exec(migration);
+  for (const migration of migrations) await db.exec(migration);
   await db.exec(policies);
   await seedOrganization(orgA, userA, 100);
   await seedOrganization(orgB, userB, 200);
+  await db.exec(`INSERT INTO "AuditEvent" ("id", "organizationId", "action", "entityType", "entityId") VALUES ('${platformAuditId}', NULL, 'payment.unmatched', 'GatewayEvent', '${gatewayId}');
+    INSERT INTO "OutboxEvent" ("id", "organizationId", "type", "payload") VALUES ('${platformOutboxId}', NULL, 'lead.created', '{}');`);
   await db.exec(`INSERT INTO "StaffMember" ("id", "userId", "role", "updatedAt") VALUES ('${id(300)}', '${staffUser}', 'sales', now())`);
   await db.exec(`INSERT INTO "GatewayEvent" ("id", "provider", "eventId", "rawBody", "rawBodyHash") VALUES ('${gatewayId}', 'test', 'event-1', '{}', 'gateway-hash')`);
 });
@@ -126,7 +129,7 @@ describe("Postgres RLS policies", () => {
     await asRole("authenticated", userA, async () => {
       for (const table of tenantTableNames) expect(await count(table), table).toBe(1);
     });
-    expect(tenantTableNames).toHaveLength(17);
+    expect(tenantTableNames).toHaveLength(15);
   });
 
   it("isolates all tenant tables for organization B", async () => {
@@ -138,6 +141,17 @@ describe("Postgres RLS policies", () => {
   it("lets staff see both organizations", async () => {
     await asRole("authenticated", staffUser, async () => {
       for (const table of tenantTableNames) expect(await count(table), table).toBe(2);
+    });
+  });
+
+  it("keeps platform events staff-only while preserving organization event visibility", async () => {
+    await asRole("authenticated", userA, async () => {
+      expect(await count("AuditEvent")).toBe(1);
+      expect(await count("OutboxEvent")).toBe(1);
+    });
+    await asRole("authenticated", staffUser, async () => {
+      expect(await count("AuditEvent")).toBe(3);
+      expect(await count("OutboxEvent")).toBe(3);
     });
   });
 

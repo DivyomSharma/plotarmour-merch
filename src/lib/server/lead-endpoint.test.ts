@@ -1,9 +1,7 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { readMigrationSql } from "@/lib/db/migrations";
 import { handleLeadRequest, InMemoryLeadRateLimiter } from "@/lib/server/lead-endpoint";
 import type { SqlClient } from "@/lib/server/leads";
 
@@ -14,7 +12,7 @@ const request = (body: string, headers: HeadersInit = {}) => new Request("https:
 
 beforeAll(async () => {
   db = new PGlite();
-  await db.exec(readFileSync(resolve(process.cwd(), "prisma/migrations/0001_init/migration.sql"), "utf8"));
+  for (const migration of readMigrationSql()) await db.exec(migration);
   client = { query: (text, params) => db.query<Record<string, unknown>>(text, params as never) };
 });
 afterAll(async () => db.close());

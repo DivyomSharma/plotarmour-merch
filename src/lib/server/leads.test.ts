@@ -1,9 +1,7 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { readMigrationSql } from "@/lib/db/migrations";
 import { createLead, generatePublicId, parseLeadRequestBody, type ParsedLead, type SqlClient } from "@/lib/server/leads";
 
 let db: PGlite;
@@ -16,7 +14,7 @@ const input: ParsedLead = {
 
 beforeAll(async () => {
   db = new PGlite();
-  await db.exec(readFileSync(resolve(process.cwd(), "prisma/migrations/0001_init/migration.sql"), "utf8"));
+  for (const migration of readMigrationSql()) await db.exec(migration);
   client = { query: (text, params) => db.query<Record<string, unknown>>(text, params as never) };
 });
 afterAll(async () => db.close());
@@ -39,6 +37,16 @@ describe("persisted leads", () => {
     expect(second.publicId).toBe("RECOVERED02");
     const row = await db.query<Record<string, unknown>>('SELECT "organizationId", "budgetPerUnitAmount", "source" FROM "Lead" WHERE "publicId" = $1', [second.publicId]);
     expect(row.rows[0]).toMatchObject({ organizationId: null, budgetPerUnitAmount: 12300, source: "website_order_form" });
+    const outbox = await db.query<Record<string, unknown>>('SELECT "organizationId", "type", "payload" FROM "OutboxEvent" WHERE "payload"->>\'publicId\' = $1', [second.publicId]);
+    expect(outbox.rows).toEqual([{ organizationId: null, type: "lead.created", payload: { leadId: expect.any(String), publicId: second.publicId } }]);
+  });
+
+  it("rolls back the lead when its atomic outbox insert fails", async () => {
+    await db.exec(`CREATE FUNCTION fail_lead_outbox() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW."type" = 'lead.created' THEN RAISE EXCEPTION 'outbox failed'; END IF; RETURN NEW; END; $$;
+      CREATE TRIGGER fail_lead_outbox_trigger BEFORE INSERT ON "OutboxEvent" FOR EACH ROW EXECUTE FUNCTION fail_lead_outbox();`);
+    await expect(createLead(client, input, () => "OUTBOXFAIL1")).rejects.toThrow("outbox failed");
+    expect((await db.query('SELECT * FROM "Lead" WHERE "publicId" = $1', ["OUTBOXFAIL1"])).rows).toHaveLength(0);
+    await db.exec('DROP TRIGGER fail_lead_outbox_trigger ON "OutboxEvent"; DROP FUNCTION fail_lead_outbox();');
   });
 
   it("keeps SQL-shaped input literal and leaves the table intact", async () => {

@@ -1,10 +1,8 @@
 import { createHmac, randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import { PGlite } from "@electric-sql/pglite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { readMigrationSql } from "@/lib/db/migrations";
 import { processRazorpayEvent } from "@/lib/server/payment-service";
 import { acceptQuote } from "@/lib/server/quote-service";
 import { transactionalPGlite } from "@/lib/server/test-db";
@@ -22,9 +20,9 @@ async function count(table: string): Promise<number> {
   return (await database.query<{ count: number }>(`SELECT count(*)::int AS count FROM "${table}"`)).rows[0].count;
 }
 
-async function seedQuote(status = "sent", activeVersion = version): Promise<void> {
+async function seedQuote(status = "sent", activeVersion = version, validUntil: string | null = null): Promise<void> {
   await database.exec(`INSERT INTO "Organization" ("id", "name", "updatedAt") VALUES ('${org}', 'Org', now()), ('${otherOrg}', 'Other', now());
-    INSERT INTO "Quote" ("id", "publicId", "organizationId", "status", "updatedAt") VALUES ('${quote}', 'Q1', '${org}', '${status}', now());
+    INSERT INTO "Quote" ("id", "publicId", "organizationId", "status", "validUntil", "updatedAt") VALUES ('${quote}', 'Q1', '${org}', '${status}', ${validUntil ? `'${validUntil}'` : "NULL"}, now());
     INSERT INTO "QuoteVersion" ("id", "organizationId", "quoteId", "versionNumber", "canonicalJson", "contentHash") VALUES ('${version}', '${org}', '${quote}', 1, '{"terms":"net 15"}', '${hash}');
     UPDATE "Quote" SET "activeVersionId" = '${activeVersion}' WHERE "id" = '${quote}';
     INSERT INTO "QuoteLine" ("id", "organizationId", "quoteVersionId", "description", "quantity", "unitAmount", "totalAmount") VALUES ('${randomUUID()}', '${org}', '${version}', 'Tee', 10, 1000, 10000);`);
@@ -43,7 +41,7 @@ function webhook(event: string, amount = 10000, orderId = "order_rzp"): { body: 
   return { body, signature: createHmac("sha256", "secret").update(body).digest("hex") };
 }
 
-beforeEach(async () => { database = new PGlite(); await database.exec(readFileSync(resolve(process.cwd(), "prisma/migrations/0001_init/migration.sql"), "utf8")); });
+beforeEach(async () => { database = new PGlite(); for (const migration of readMigrationSql()) await database.exec(migration); });
 afterEach(async () => { await database.close(); });
 
 describe("acceptQuote", () => {
@@ -62,6 +60,20 @@ describe("acceptQuote", () => {
     await expect(acceptQuote(db, base)).resolves.toEqual({ outcome: "reject", reason: "not_sent" });
     await expect(acceptQuote(db, { ...base, organizationId: otherOrg })).resolves.toEqual({ outcome: "reject", reason: "not_found" });
     await expect(acceptQuote(db, { ...base, presentedContentHash: "wrong" })).resolves.toEqual({ outcome: "reject", reason: "hash_mismatch" });
+  });
+  it("rejects an expired quote without writes but replays an existing acceptance after expiry", async () => {
+    const now = new Date("2026-01-02T00:00:00.000Z");
+    await seedQuote("sent", version, "2026-01-01T00:00:00.000Z");
+    const db = transactionalPGlite(database);
+    const input = { organizationId: org, quoteId: quote, quoteVersionId: version, presentedContentHash: hash, idempotencyKey: "key", actorId: actor, now };
+    await expect(acceptQuote(db, input)).resolves.toEqual({ outcome: "reject", reason: "expired" });
+    expect(await count("QuoteApproval")).toBe(0); expect(await count("Order")).toBe(0);
+
+    await database.exec(`UPDATE "Quote" SET "validUntil" = '2026-01-03T00:00:00.000Z' WHERE "id" = '${quote}'`);
+    const accepted = await acceptQuote(db, input);
+    if (accepted.outcome !== "accepted") throw new Error("Expected quote acceptance.");
+    await database.exec(`UPDATE "Quote" SET "validUntil" = '2026-01-01T00:00:00.000Z' WHERE "id" = '${quote}'`);
+    await expect(acceptQuote(db, input)).resolves.toEqual({ outcome: "replay", orderPublicId: accepted.orderPublicId });
   });
   it("rolls every acceptance write back if order creation conflicts", async () => {
     await seedQuote(); const db = transactionalPGlite(database);
@@ -103,6 +115,10 @@ describe("processRazorpayEvent", () => {
     const input = { rawBody: hook.body, signature: hook.signature, secret: "secret", eventId: "early" };
     await expect(processRazorpayEvent(db, input)).resolves.toEqual({ outcome: "unmatched" });
     expect((await database.query<{ processedAt: Date | null }>('SELECT "processedAt" FROM "GatewayEvent"')).rows[0].processedAt).toBeNull();
+    const unmatchedAudit = await database.query<{ organizationId: string | null; actorKind: string; action: string; entityType: string; reason: string }>('SELECT "organizationId", "actorKind", "action", "entityType", "reason" FROM "AuditEvent"');
+    expect(unmatchedAudit.rows).toEqual([{ organizationId: null, actorKind: "webhook", action: "payment.unmatched", entityType: "GatewayEvent", reason: "No payment attempt matches this Razorpay order id." }]);
+    await expect(processRazorpayEvent(db, input)).resolves.toEqual({ outcome: "unmatched" });
+    expect(await count("AuditEvent")).toBe(1);
     // The webhook raced ahead of the attempt row; once it commits, Razorpay retries the SAME event.
     await database.exec(`INSERT INTO "PaymentAttempt" ("id", "organizationId", "orderId", "provider", "providerOrderId", "amount", "currency", "updatedAt") VALUES ('${randomUUID()}', '${org}', '${order}', 'razorpay', 'order_rzp', 10000, 'INR', now())`);
     await expect(processRazorpayEvent(db, input)).resolves.toEqual({ outcome: "processed" });

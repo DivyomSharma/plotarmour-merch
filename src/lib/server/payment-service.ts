@@ -31,7 +31,7 @@ function paymentFromPayload(body: unknown): { event: string; payment: RazorpayPa
   return { event, payment: { id: value.id, order_id: value.order_id, amount: value.amount, currency: value.currency } };
 }
 
-async function audit(tx: SqlClient, organizationId: string, action: string, entityType: string, entityId: string, reason: string): Promise<void> {
+async function audit(tx: SqlClient, organizationId: string | null, action: string, entityType: string, entityId: string, reason: string): Promise<void> {
   await tx.query(`INSERT INTO "AuditEvent" ("id", "organizationId", "actorKind", "action", "entityType", "entityId", "reason") VALUES ($1, $2, 'webhook', $3, $4, $5, $6)`, [randomUUID(), organizationId, action, entityType, entityId, reason]);
 }
 
@@ -62,7 +62,13 @@ export async function processRazorpayEvent(db: TransactionalDb, input: ProcessRa
     // Leave the ledger row UNPROCESSED: a webhook can race ahead of the attempt row, and Razorpay's
     // retry of the same event must still be able to complete the payment. The route must answer
     // non-2xx for "unmatched" so Razorpay retries.
-    if (!attempt) return { outcome: "unmatched" };
+    if (!attempt) {
+      const existingAudit = await tx.query(`SELECT "id" FROM "AuditEvent" WHERE "entityId" = $1 AND "action" = 'payment.unmatched'`, [gateway.id]);
+      if (existingAudit.rows.length === 0) {
+        await audit(tx, null, "payment.unmatched", "GatewayEvent", gateway.id, "No payment attempt matches this Razorpay order id.");
+      }
+      return { outcome: "unmatched" };
+    }
     if (attempt.amount !== payment.amount || attempt.currency !== payment.currency) {
       await audit(tx, attempt.organizationId, "payment.amount_mismatch", "PaymentAttempt", attempt.id, "Gateway amount or currency differs from the payment attempt.");
       await markProcessed(tx, gateway.id, now);

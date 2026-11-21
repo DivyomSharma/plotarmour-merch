@@ -2,6 +2,8 @@
 
 import { Pool } from "pg";
 
+import { configurePgTime } from "@/lib/server/pg-time";
+
 import type { SqlClient } from "@/lib/server/leads";
 import type { TransactionalDb } from "@/lib/server/transaction";
 
@@ -14,6 +16,7 @@ export function getDb(): TransactionalDb | null {
     db = null;
     return db;
   }
+  configurePgTime();
   const connectionPool = new Pool({ connectionString, max: 3, connectionTimeoutMillis: 5_000, idleTimeoutMillis: 10_000 });
   db = {
     query: (text: string, params?: unknown[]) => connectionPool.query(text, params),

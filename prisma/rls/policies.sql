@@ -113,9 +113,9 @@ CREATE POLICY invoice_select ON "Invoice" FOR SELECT TO authenticated USING (app
 DROP POLICY IF EXISTS tax_snapshot_select ON "TaxSnapshot";
 CREATE POLICY tax_snapshot_select ON "TaxSnapshot" FOR SELECT TO authenticated USING (app.is_org_member("organizationId") OR app.is_staff());
 DROP POLICY IF EXISTS audit_event_select ON "AuditEvent";
-CREATE POLICY audit_event_select ON "AuditEvent" FOR SELECT TO authenticated USING (app.is_org_member("organizationId") OR app.is_staff());
+CREATE POLICY audit_event_select ON "AuditEvent" FOR SELECT TO authenticated USING (("organizationId" IS NOT NULL AND app.is_org_member("organizationId")) OR app.is_staff());
 DROP POLICY IF EXISTS outbox_event_select ON "OutboxEvent";
-CREATE POLICY outbox_event_select ON "OutboxEvent" FOR SELECT TO authenticated USING (app.is_org_member("organizationId") OR app.is_staff());
+CREATE POLICY outbox_event_select ON "OutboxEvent" FOR SELECT TO authenticated USING (("organizationId" IS NOT NULL AND app.is_org_member("organizationId")) OR app.is_staff());
 
 -- Foreign keys do not enforce tenancy, so every member-writable table checks that the
 -- rows it references belong to the same organisation. Subqueries run under the caller's

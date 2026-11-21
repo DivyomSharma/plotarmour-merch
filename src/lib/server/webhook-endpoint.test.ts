@@ -1,10 +1,8 @@
 import { createHmac, randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import { PGlite } from "@electric-sql/pglite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { readMigrationSql } from "@/lib/db/migrations";
 import type { TransactionalDb } from "@/lib/server/transaction";
 import { transactionalPGlite } from "@/lib/server/test-db";
 import { handleRazorpayWebhook } from "@/lib/server/webhook-endpoint";
@@ -47,7 +45,7 @@ function deps(): { getDb: () => TransactionalDb; getSecret: () => string } {
 
 beforeEach(async () => {
   database = new PGlite();
-  await database.exec(readFileSync(resolve(process.cwd(), "prisma/migrations/0001_init/migration.sql"), "utf8"));
+  for (const migration of readMigrationSql()) await database.exec(migration);
 });
 afterEach(async () => database.close());
 

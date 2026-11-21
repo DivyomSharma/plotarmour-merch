@@ -7,7 +7,8 @@ import { stateMachines } from "./state-machines";
 const schema = readFileSync(resolve(process.cwd(), "prisma/schema.prisma"), "utf8");
 // Lead is tenant-owned after qualification, but anonymous enquiries must exist before that point.
 const organizationExceptions = new Set(["Organization", "StaffMember", "GatewayEvent"]);
-const nullableOrganizationIdExceptions = new Set(["Lead"]);
+// Anonymous leads and pre-tenant platform events are staff-only until attached to an organization.
+const nullableOrganizationIdExceptions = new Set(["Lead", "AuditEvent", "OutboxEvent"]);
 
 function block(kind: "model" | "enum", name: string): string {
   const match = schema.match(new RegExp(`${kind}\\s+${name}\\s+\\{([\\s\\S]*?)\\n\\}`));
@@ -102,5 +103,9 @@ describe("Prisma schema invariants", () => {
     const lead = block("model", "Lead");
     expect(lead).toMatch(/^\s*contactPhone\s+String/m);
     expect(lead).toMatch(/^\s*organizationId\s+String\?\s+@db\.Uuid/m);
+  });
+
+  it("records quote validity separately from quote state", () => {
+    expect(block("model", "Quote")).toMatch(/^\s*validUntil\s+DateTime\?/m);
   });
 });

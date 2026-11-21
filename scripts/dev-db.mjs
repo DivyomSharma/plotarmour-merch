@@ -6,7 +6,7 @@
 //
 // Data is lost when the process stops. This is for development and tests only; production uses
 // a real Postgres (for example Supabase), where `auth.uid()` and the roles already exist.
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { PGlite } from "@electric-sql/pglite";
@@ -14,7 +14,11 @@ import { PGLiteSocketServer } from "@electric-sql/pglite-socket";
 
 const port = Number(process.env.DEV_DB_PORT ?? 5433);
 const root = process.cwd();
-const migration = readFileSync(resolve(root, "prisma/migrations/0001_init/migration.sql"), "utf8");
+const migrations = readdirSync(resolve(root, "prisma/migrations"), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort()
+  .map((folder) => readFileSync(resolve(root, "prisma/migrations", folder, "migration.sql"), "utf8"));
 const policies = readFileSync(resolve(root, "prisma/rls/policies.sql"), "utf8");
 
 const db = await PGlite.create();
@@ -27,7 +31,7 @@ await db.exec(`
     SELECT nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
   $$;
 `);
-await db.exec(migration);
+for (const migration of migrations) await db.exec(migration);
 await db.exec(policies);
 
 // PGlite is a single-connection database; the socket server multiplexes. Keep this at or above the

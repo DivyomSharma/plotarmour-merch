@@ -5,7 +5,7 @@ import { decideQuoteAcceptance } from "@/lib/domain/quote-acceptance";
 import { generatePublicId, type SqlClient } from "@/lib/server/leads";
 import { runSerializable, type TransactionalDb } from "@/lib/server/transaction";
 
-type QuoteRow = { id: string; status: State<"quote">; "activeVersionId": string | null; version: number };
+type QuoteRow = { id: string; status: State<"quote">; "activeVersionId": string | null; validUntil: Date | null; version: number };
 type VersionRow = { id: string; "canonicalJson": unknown; "contentHash": string };
 type ApprovalRow = { "acceptIdempotencyKey": string; "contentHash": string };
 type OrderRow = { "publicId": string };
@@ -36,7 +36,7 @@ async function insertAudit(tx: SqlClient, organizationId: string, action: string
 export async function acceptQuote(db: TransactionalDb, input: AcceptQuoteInput): Promise<AcceptQuoteResult> {
   const now = input.now ?? new Date();
   return runSerializable(db, async (tx) => {
-    const quoteResult = await tx.query(`SELECT "id", "status", "activeVersionId", "version" FROM "Quote" WHERE "id" = $1 AND "organizationId" = $2 FOR UPDATE`, [input.quoteId, input.organizationId]);
+    const quoteResult = await tx.query(`SELECT "id", "status", "activeVersionId", "validUntil", "version" FROM "Quote" WHERE "id" = $1 AND "organizationId" = $2 FOR UPDATE`, [input.quoteId, input.organizationId]);
     const quote = quoteResult.rows[0] as QuoteRow | undefined;
     if (!quote) return { outcome: "reject", reason: "not_found" };
 
@@ -46,7 +46,7 @@ export async function acceptQuote(db: TransactionalDb, input: AcceptQuoteInput):
 
     const approvalResult = await tx.query(`SELECT "acceptIdempotencyKey", "contentHash" FROM "QuoteApproval" WHERE "quoteVersionId" = $1`, [version.id]);
     const approval = approvalResult.rows[0] as ApprovalRow | undefined;
-    const decision = decideQuoteAcceptance({ quoteStatus: quote.status, versionContentHash: version.contentHash, presentedContentHash: input.presentedContentHash, idempotencyKey: input.idempotencyKey, existingApproval: approval && { idempotencyKey: approval.acceptIdempotencyKey, contentHash: approval.contentHash }, now });
+    const decision = decideQuoteAcceptance({ quoteStatus: quote.status, versionContentHash: version.contentHash, presentedContentHash: input.presentedContentHash, idempotencyKey: input.idempotencyKey, existingApproval: approval && { idempotencyKey: approval.acceptIdempotencyKey, contentHash: approval.contentHash }, now, expiresAt: quote.validUntil ?? undefined });
     if (decision.outcome === "reject") return decision;
     if (decision.outcome === "replay") {
       const orderResult = await tx.query(`SELECT "publicId" FROM "Order" WHERE "quoteVersionId" = $1`, [version.id]);

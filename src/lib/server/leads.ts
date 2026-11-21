@@ -163,8 +163,15 @@ export async function createLead(
     const publicId = publicIdGenerator();
     try {
       await db.query(
-        `INSERT INTO "Lead" ("id", "publicId", "organizationId", "contactName", "contactPhone", "companyName", "selectedProduct", "kitSlug", "expectedQuantity", "deliveryDate", "deliveryLocation", "budgetPerUnitAmount", "decoration", "wantsSample", "customizationRequest", "remarks", "source", "updatedAt") VALUES ($1, $2, NULL, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'website_order_form', now())`,
-        [randomUUID(), publicId, input.name, input.phone, input.organization, input.selectedProduct, input.kitSlug, input.expectedQuantity, input.deliveryDate, input.deliveryLocation, input.budgetPerUnitAmount, input.decoration, input.wantsSample, input.customizationRequest, input.remarks],
+        `WITH new_lead AS (
+          INSERT INTO "Lead" ("id", "publicId", "organizationId", "contactName", "contactPhone", "companyName", "selectedProduct", "kitSlug", "expectedQuantity", "deliveryDate", "deliveryLocation", "budgetPerUnitAmount", "decoration", "wantsSample", "customizationRequest", "remarks", "source", "updatedAt")
+          VALUES ($1, $2, NULL, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'website_order_form', now())
+          RETURNING "id", "publicId"
+        )
+        INSERT INTO "OutboxEvent" ("id", "organizationId", "type", "payload")
+        SELECT $16, NULL, 'lead.created', jsonb_build_object('leadId', "id", 'publicId', "publicId")
+        FROM new_lead`,
+        [randomUUID(), publicId, input.name, input.phone, input.organization, input.selectedProduct, input.kitSlug, input.expectedQuantity, input.deliveryDate, input.deliveryLocation, input.budgetPerUnitAmount, input.decoration, input.wantsSample, input.customizationRequest, input.remarks, randomUUID()],
       );
       return { publicId };
     } catch (error) {
