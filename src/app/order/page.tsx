@@ -2,7 +2,24 @@ import { LeadForm } from "@/components/lead-form";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { projectStages } from "@/lib/merch-data";
 
-export default function OrderPage() {
+export default async function OrderPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    kit?: string | string[];
+    headcount?: string | string[];
+    budget?: string | string[];
+  }>;
+}) {
+  const { kit, headcount, budget } = await searchParams;
+  const defaultProduct = typeof kit === "string" ? kit.slice(0, 80) : "";
+  const sanitiseNumber = (value: string | string[] | undefined) => {
+    if (typeof value !== "string") return "";
+    const trimmed = value.trim();
+    if (!/^\d{1,9}$/.test(trimmed)) return "";
+    return String(Number.parseInt(trimmed, 10));
+  };
+
   return (
     <WorkspaceShell
       eyebrow="PlotArmour order intake"
@@ -32,13 +49,18 @@ export default function OrderPage() {
               Design direction
             </p>
             <p className="mt-4 text-sm leading-7 text-text-soft">
-              The workspace stays black-and-white, document-like, and operational.
-              No ecommerce cards, no cart metaphors, and no consumer checkout language.
+              The workspace stays black-and-white, document-like, and
+              operational. No ecommerce cards, no cart metaphors, and no
+              consumer checkout language.
             </p>
           </div>
         </section>
 
-        <LeadForm />
+        <LeadForm
+          defaultProduct={defaultProduct}
+          defaultHeadcount={sanitiseNumber(headcount)}
+          defaultBudget={sanitiseNumber(budget)}
+        />
       </main>
     </WorkspaceShell>
   );

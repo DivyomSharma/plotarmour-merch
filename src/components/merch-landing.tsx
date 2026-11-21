@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import Link from "next/link";
 import { ReactNode } from "react";
 import { buildWhatsAppLink } from "@/lib/contact";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
@@ -9,6 +15,7 @@ import { MagneticButton } from "@/components/magnetic-button";
 import { ProductShowcase } from "@/components/product-showcase";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { kits } from "@/lib/kits";
 
 const stats = [
   { label: "Live Styles", value: "21 SKUs" },
@@ -44,72 +51,63 @@ const process = [
   {
     number: "01",
     title: "Brief",
-    description: "You tell us the audience, budget band, quantity, and delivery timeline.",
+    description:
+      "You tell us the audience, budget band, quantity, and delivery timeline.",
   },
   {
     number: "02",
     title: "Concept",
-    description: "We shape the product mix, design direction, finishes, and packaging route.",
+    description:
+      "We shape the product mix, design direction, finishes, and packaging route.",
   },
   {
     number: "03",
     title: "Approval",
-    description: "Mockups, specifications, and commercial details are aligned before production.",
+    description:
+      "Mockups, specifications, and commercial details are aligned before production.",
   },
   {
     number: "04",
     title: "Delivery",
-    description: "We produce, pack, sort, and deliver without sending you through vendor loops.",
+    description:
+      "We produce, pack, sort, and deliver without sending you through vendor loops.",
   },
 ];
 
 const reasons = [
   "Design-first thinking that still respects procurement realities.",
-  "Low MOQ from 30 units for smaller internal or campus runs.",
+  "Low MOQ of 10 pieces per style for smaller internal or campus runs.",
   "One partner across design, sourcing, production, packaging, and dispatch.",
   "Fast execution without making the final output feel rushed.",
-];
-
-const testimonials = [
-  {
-    quote:
-      "The final merch looked far more considered than what we usually get from bulk vendors. The process was also surprisingly clean.",
-    name: "People Operations Lead",
-    role: "Series A startup",
-  },
-  {
-    quote:
-      "PlotArmour helped us land merchandise that actually matched our fest identity instead of feeling like a generic print run.",
-    name: "Fest Core Committee",
-    role: "Engineering college",
-  },
-  {
-    quote:
-      "The best part was not having to coordinate multiple vendors for apparel, packaging, and delivery. It all came through one channel.",
-    name: "Admin & HR Team",
-    role: "Corporate events team",
-  },
 ];
 
 const packages = [
   {
     name: "Starter",
-    range: "30-100 units",
-    detail: "Best for internal teams, farewell runs, committee drops, and early-stage gifting.",
+    range: "10-100 units",
+    detail:
+      "Best for internal teams, farewell runs, committee drops, and early-stage gifting.",
   },
   {
     name: "Growth",
     range: "100-500 units",
-    detail: "Best for larger campus programs, onboarding waves, launch kits, and event merchandise.",
+    detail:
+      "Best for larger campus programs, onboarding waves, launch kits, and event merchandise.",
   },
   {
     name: "Scale",
     range: "500+ units",
-    detail: "Best for national rollouts, large employee programs, and multi-location dispatch planning.",
+    detail:
+      "Best for national rollouts, large employee programs, and multi-location dispatch planning.",
   },
 ];
 
-const trustMarks = ["Design to delivery", "Low MOQ from 30", "Premium packaging", "Pan-India dispatch"];
+const trustMarks = [
+  "Design to delivery",
+  "MOQ 10 pcs",
+  "Premium packaging",
+  "Pan-India dispatch",
+];
 
 function BrandLogo() {
   return (
@@ -193,25 +191,33 @@ function ReasonItem({ copy }: { copy: string }) {
   );
 }
 
-function TestimonialCard({
-  quote,
+function KitCard({
   name,
-  role,
+  summary,
+  audience,
+  slug,
 }: {
-  quote: string;
   name: string;
-  role: string;
+  summary: string;
+  audience: string;
+  slug: string;
 }) {
   return (
-    <div className="surface-card rounded-[28px] p-6">
-      <p className="text-base leading-8 text-foreground">{quote}</p>
-      <div className="mt-8 border-t fine-rule pt-5">
-        <p className="font-display text-[1.2rem] font-semibold tracking-[-0.04em] text-foreground">
-          {name}
-        </p>
-        <p className="mt-1 text-sm text-text-soft">{role}</p>
-      </div>
-    </div>
+    <a
+      href={`/kits/${slug}`}
+      className="surface-card flex h-full flex-col rounded-[28px] p-6 transition-colors hover:border-[color:var(--border-strong)]"
+    >
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+        {audience}
+      </p>
+      <h3 className="mt-4 font-display text-[1.5rem] font-semibold tracking-[-0.05em] text-foreground">
+        {name}
+      </h3>
+      <p className="mt-3 flex-1 text-sm leading-7 text-text-soft">{summary}</p>
+      <span className="mt-6 text-sm font-semibold text-foreground">
+        Explore kit &rarr;
+      </span>
+    </a>
   );
 }
 
@@ -245,7 +251,11 @@ function PackageCard({
 export function MerchLanding() {
   const shouldReduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const wordY = useTransform(scrollYProgress, [0, 0.2], [0, shouldReduceMotion ? 0 : -50]);
+  const wordY = useTransform(
+    scrollYProgress,
+    [0, 0.2],
+    [0, shouldReduceMotion ? 0 : -50],
+  );
 
   const quickWhatsAppLink = buildWhatsAppLink(
     "Hi PlotArmour Merch, we want a quote for bulk merch.",
@@ -262,19 +272,37 @@ export function MerchLanding() {
           </a>
 
           <nav className="hidden items-center gap-6 text-sm text-text-soft md:flex">
-            <a href="#audiences" className="transition-colors hover:text-foreground">
+            <a
+              href="#audiences"
+              className="transition-colors hover:text-foreground"
+            >
               Who it&apos;s for
             </a>
-            <a href="#products" className="transition-colors hover:text-foreground">
+            <a
+              href="#products"
+              className="transition-colors hover:text-foreground"
+            >
               Catalogue
             </a>
-            <a href="#process" className="transition-colors hover:text-foreground">
+            <a href="#kits" className="transition-colors hover:text-foreground">
+              Kits
+            </a>
+            <a
+              href="#process"
+              className="transition-colors hover:text-foreground"
+            >
               Process
             </a>
-            <a href="#proof" className="transition-colors hover:text-foreground">
+            <a
+              href="#proof"
+              className="transition-colors hover:text-foreground"
+            >
               Proof
             </a>
-            <a href="/order" className="transition-colors hover:text-foreground">
+            <a
+              href="/order"
+              className="transition-colors hover:text-foreground"
+            >
               Order Now
             </a>
           </nav>
@@ -289,7 +317,10 @@ export function MerchLanding() {
       </header>
 
       <main>
-        <section id="top" className="hero-grid relative overflow-hidden border-b fine-rule">
+        <section
+          id="top"
+          className="hero-grid relative overflow-hidden border-b fine-rule"
+        >
           <HeroAtmosphere />
 
           <motion.div
@@ -302,15 +333,17 @@ export function MerchLanding() {
 
           <div className="mx-auto flex min-h-[calc(100svh-81px)] max-w-7xl items-center justify-center px-4 py-14 md:px-6 lg:py-18">
             <ScrollReveal className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
-              <SectionEyebrow>Bulk merch and gifting, handled end to end</SectionEyebrow>
+              <SectionEyebrow>
+                Bulk merch and gifting, handled end to end
+              </SectionEyebrow>
               <h1 className="mt-7 font-display text-[3rem] font-semibold leading-[0.92] tracking-[-0.08em] text-foreground sm:text-[4.5rem] xl:text-[5.75rem]">
-                Premium merch and gifting for teams that care how they show up.
+                Your merchandise partner, from concept to doorstep.
               </h1>
               <p className="mt-7 max-w-2xl text-base leading-8 text-text-soft md:text-lg">
-                PlotArmour designs, manufactures, and delivers bulk apparel, swag
-                kits, and corporate gifting for campuses, startups, and modern
-                teams that want the final output to feel considered. The public site
-                stays editorial; the operational flow begins only after you click Order Now.
+                Custom apparel, employee kits, event merchandise and corporate
+                gifting, sourced, customised and delivered under one roof. One
+                quotation, one point of contact. Got a budget per head? Tell us
+                and we will build the package.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -353,13 +386,14 @@ export function MerchLanding() {
               <SectionEyebrow>Who it&apos;s for</SectionEyebrow>
               <div className="mt-6 max-w-3xl">
                 <h2 className="font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                  Built for institutions, teams, and brands that need merchandise
-                  to feel well made.
+                  Built for institutions, teams, and brands that need
+                  merchandise to feel well made.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-text-soft">
                   This is a serious B2B merchandise surface, so the structure is
-                  designed to answer the questions a buyer actually has: fit, quality,
-                  MOQ, speed, delivery confidence, and whether the backend process feels managed.
+                  designed to answer the questions a buyer actually has: fit,
+                  quality, MOQ, speed, delivery confidence, and whether the
+                  backend process feels managed.
                 </p>
               </div>
             </ScrollReveal>
@@ -384,18 +418,52 @@ export function MerchLanding() {
                 <div className="max-w-3xl">
                   <SectionEyebrow>Capabilities</SectionEyebrow>
                   <h2 className="mt-6 font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                    Real products, real GSM bands, and source-backed visuals presented in a cleaner B2B format.
+                    Real products, real GSM bands, and source-backed visuals
+                    presented in a cleaner B2B format.
                   </h2>
                 </div>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
                   Every visible product below maps to a live catalog reference.
-                  The goal is to let a buyer shortlist the exact base garment before
-                  the quote and workspace flow begins.
+                  The goal is to let a buyer shortlist the exact base garment
+                  before the quote and workspace flow begins.
                 </p>
               </div>
             </ScrollReveal>
 
             <ProductShowcase />
+          </div>
+        </section>
+
+        <section
+          id="kits"
+          className="section-shell border-b fine-rule px-4 py-16 md:px-6 md:py-24"
+        >
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal>
+              <SectionEyebrow>Ready-made kits</SectionEyebrow>
+              <h2 className="mt-6 max-w-3xl font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
+                Come with a budget. We build the whole package.
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-text-soft">
+                Start from a curated kit or tell us your per-head budget, for
+                example ₹500 per employee or ₹1,500 per attendee. Contents are
+                indicative and quoted per order.
+              </p>
+            </ScrollReveal>
+
+            <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {kits.map((kit, index) => (
+                <ScrollReveal key={kit.name} delay={index * 0.05}>
+                  <KitCard {...kit} />
+                </ScrollReveal>
+              ))}
+            </div>
+            <Link
+              href="/kits"
+              className="mt-8 inline-flex text-sm font-semibold text-foreground underline decoration-[color:var(--border-strong)] underline-offset-4"
+            >
+              View all kits
+            </Link>
           </div>
         </section>
 
@@ -407,7 +475,8 @@ export function MerchLanding() {
             <ScrollReveal>
               <SectionEyebrow>Process</SectionEyebrow>
               <h2 className="mt-6 max-w-3xl font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                A simple production flow that feels dependable from brief to delivery.
+                A simple production flow that feels dependable from brief to
+                delivery.
               </h2>
             </ScrollReveal>
 
@@ -426,12 +495,13 @@ export function MerchLanding() {
             <ScrollReveal>
               <SectionEyebrow>Why PlotArmour</SectionEyebrow>
               <h2 className="mt-6 max-w-2xl font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                Sleek enough for modern brands, operational enough for bulk execution.
+                Sleek enough for modern brands, operational enough for bulk
+                execution.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-8 text-text-soft">
-                The redesign is intentionally calmer because the audience here is
-                not browsing for entertainment. They are assessing whether you can
-                handle quality, clarity, and delivery without friction.
+                The redesign is intentionally calmer because the audience here
+                is not browsing for entertainment. They are assessing whether
+                you can handle quality, clarity, and delivery without friction.
               </p>
             </ScrollReveal>
 
@@ -457,8 +527,8 @@ export function MerchLanding() {
                   Signals of trust should feel structured, not noisy.
                 </h2>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
-                  We have intentionally toned down the treatment of social proof
-                  so it reads like credibility, not decoration.
+                  Client names and photographed completed orders will appear
+                  here once approved for publication.
                 </p>
               </div>
             </ScrollReveal>
@@ -477,14 +547,6 @@ export function MerchLanding() {
                 </ScrollReveal>
               ))}
             </div>
-
-            <div className="mt-10 grid gap-6 lg:grid-cols-3">
-              {testimonials.map((testimonial, index) => (
-                <ScrollReveal key={testimonial.name} delay={index * 0.06}>
-                  <TestimonialCard {...testimonial} />
-                </ScrollReveal>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -495,12 +557,14 @@ export function MerchLanding() {
                 <div className="max-w-3xl">
                   <SectionEyebrow>Order bands</SectionEyebrow>
                   <h2 className="mt-6 font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                    Clear entry points for small, mid-scale, and large bulk programs.
+                    Clear entry points for small, mid-scale, and large bulk
+                    programs.
                   </h2>
                 </div>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
-                  No pricing here by design. The range framing simply makes it easier
-                  for a buyer to understand where their requirement sits before entering the project flow.
+                  No pricing here by design. The range framing simply makes it
+                  easier for a buyer to understand where their requirement sits
+                  before entering the project flow.
                 </p>
               </div>
             </ScrollReveal>
@@ -520,12 +584,14 @@ export function MerchLanding() {
             <ScrollReveal>
               <SectionEyebrow>Order Flow</SectionEyebrow>
               <h2 className="mt-6 max-w-2xl font-display text-[2.8rem] font-semibold leading-[0.96] tracking-[-0.07em] text-foreground md:text-[4.6rem]">
-                Keep the landing page clean. Move the real work into the workspace.
+                Keep the landing page clean. Move the real work into the
+                workspace.
               </h2>
               <p className="mt-6 max-w-xl text-base leading-8 text-text-soft">
-                The public site should market the catalogue and premium positioning.
-                The operational stack lives behind Order Now: lead creation, discussion,
-                project workspace, quotation, approvals, payments, production, and dispatch.
+                The public site should market the catalogue and premium
+                positioning. The operational stack lives behind Order Now: lead
+                creation, discussion, project workspace, quotation, approvals,
+                payments, production, and dispatch.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <MagneticButton href="/order">Order Now</MagneticButton>
@@ -540,7 +606,10 @@ export function MerchLanding() {
               </div>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.1} className="surface-panel rounded-[30px] p-6 md:p-8">
+            <ScrollReveal
+              delay={0.1}
+              className="surface-panel rounded-[30px] p-6 md:p-8"
+            >
               <div className="grid gap-4">
                 {[
                   "Lead created from short form",
@@ -550,7 +619,10 @@ export function MerchLanding() {
                   "Advance payment, production specification, and sample approval",
                   "Production, balance payment, dispatch, and timeline logging",
                 ].map((item, index) => (
-                  <div key={item} className="flex items-start gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-4">
+                  <div
+                    key={item}
+                    className="flex items-start gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-4"
+                  >
                     <span className="font-display text-xl text-accent">
                       {String(index + 1).padStart(2, "0")}
                     </span>

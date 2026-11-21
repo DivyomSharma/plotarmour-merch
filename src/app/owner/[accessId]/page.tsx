@@ -1,8 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { OWNER_DASHBOARD_ID } from "@/lib/internal-routes";
 import { dashboardBuckets, mockProjects } from "@/lib/merch-data";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 const statusLabels = {
   new: "New Lead",
@@ -24,8 +29,7 @@ export default async function OwnerDashboardPage({
 
   if (accessId !== OWNER_DASHBOARD_ID) {
     notFound();
-  }
-
+}
   return (
     <WorkspaceShell
       eyebrow="Owner dashboard"

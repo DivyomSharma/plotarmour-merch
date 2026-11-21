@@ -1,8 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { getProjectByIdentifier } from "@/lib/merch-data";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 function SectionCard({
   title,
@@ -20,7 +25,6 @@ function SectionCard({
     </section>
   );
 }
-
 export default async function ProjectPage({
   params,
 }: {

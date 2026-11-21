@@ -4,7 +4,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { MagneticButton } from "@/components/magnetic-button";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { catalogCategories, catalogProducts, type CatalogProduct } from "@/lib/product-catalog";
+import {
+  catalogCategories,
+  catalogProducts,
+  type CatalogProduct,
+} from "@/lib/product-catalog";
 
 function ProductCard({ product }: { product: CatalogProduct }) {
   return (
@@ -44,15 +48,21 @@ function ProductCard({ product }: { product: CatalogProduct }) {
           </p>
         </div>
 
-        <p className="mt-4 text-sm leading-7 text-text-soft">{product.description}</p>
+        <p className="mt-4 text-sm leading-7 text-text-soft">
+          {product.description}
+        </p>
 
         <div className="mt-5 grid gap-3 text-sm text-text-soft md:grid-cols-2">
           <div className="rounded-[20px] border border-[color:var(--border)] bg-surface-soft px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em]">Material</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+              Material
+            </p>
             <p className="mt-2 text-foreground">{product.material}</p>
           </div>
           <div className="rounded-[20px] border border-[color:var(--border)] bg-surface-soft px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em]">Sizes</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+              Sizes
+            </p>
             <p className="mt-2 text-foreground">{product.sizes.join(", ")}</p>
           </div>
         </div>
@@ -73,27 +83,41 @@ function ProductCard({ product }: { product: CatalogProduct }) {
           ) : null}
         </div>
 
-        <div className="mt-6 grid gap-3 border-t fine-rule pt-5 md:grid-cols-2">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-              Quote Range
-            </p>
-            <p className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground">
-              {product.bulkPriceMarkedUp}
-            </p>
+        <div className="mt-6 border-t fine-rule pt-5">
+          <div className="grid gap-3 md:grid-cols-2">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
+                Quote Range
+              </p>
+              <p
+                aria-label={`${product.bulkPriceMarkedUp} per unit; indicative, blank garment, excluding GST. Final price confirmed in quote.`}
+                className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground"
+              >
+                {product.bulkPriceMarkedUp}
+              </p>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
+                Sample Basis
+              </p>
+              <p
+                aria-label={`${product.samplePriceMarkedUp} sample basis; indicative, blank garment, excluding GST. Final price confirmed in quote.`}
+                className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground"
+              >
+                {product.samplePriceMarkedUp}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
-              Sample Basis
-            </p>
-            <p className="mt-2 font-display text-[1.45rem] tracking-[-0.05em] text-foreground">
-              {product.samplePriceMarkedUp}
-            </p>
-          </div>
+          <p className="mt-3 text-xs leading-5 text-text-soft">
+            Indicative, blank garment, ex-GST. Final price confirmed in quote.
+          </p>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <MagneticButton href="/order" className="min-w-[160px] justify-center">
+          <MagneticButton
+            href="/order"
+            className="min-w-[160px] justify-center"
+          >
             Order Now
           </MagneticButton>
         </div>
@@ -109,7 +133,9 @@ export function ProductShowcase() {
   const visibleProducts =
     activeCategory === "All"
       ? catalogProducts
-      : catalogProducts.filter((product) => product.category === activeCategory);
+      : catalogProducts.filter(
+          (product) => product.category === activeCategory,
+        );
 
   return (
     <>
