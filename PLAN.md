@@ -318,6 +318,23 @@ An independent hostile review of this plan produced the following. Each item was
 5. Which staff roles exist at launch, and who owns quotes, artwork approval, production updates, payment reconciliation, dispatch, and support?
 6. Which real completed orders, client marks, testimonials, and product imagery may be used publicly with written permission?
 
+## Open owner decisions, with recommended defaults (status as of the batch G commit)
+
+Everything buildable without accounts or business input is built and tested (kits, product pages, WhatsApp enquiry flow, domain state machines, Prisma schema, quote calculation, canonical hashing, quote acceptance, webhook verification, GST validation; 61 tests, Lighthouse 100 on accessibility, best practices and SEO, mobile hero LCP 0.9 s). The items below are the only things blocking the rest of Phase 1. Each can be answered in one line.
+
+| # | Decision | Recommended default | Unblocks |
+| --- | --- | --- | --- |
+| 1 | Supabase project (region, plan) and who owns it | Create one project in `ap-south-1` (Mumbai); owner account, not personal | RLS policies, persisted leads, auth |
+| 2 | Razorpay account and test-mode keys | Test mode first; live only after finance sign-off (item 4) | Payment requests, webhook ledger |
+| 3 | Staff roles at launch | Owner, sales, production, finance, each a `StaffMember` row; no shared logins | Ops dashboard, quote composer |
+| 4 | GST: seller GSTIN and state, applicable rate for apparel by price slab, HSN codes, e-invoice applicability, TCS | CA confirms in writing; the rate stays an input to `calculateQuote`, never a constant | Invoices, any live payment |
+| 5 | Kit per-head budget ranges (currently placeholders, e.g. ₹900 to ₹1,800) | Owner supplies real ranges per kit; until then the UI keeps the "indicative" wording | Kit pages being trustworthy |
+| 6 | Catalogue images and prices: the catalogue cards hot-link supplier images and use supplier-derived prices | Photograph own stock or get written supplier permission; until then keep the price caption and do not index product pages with third-party imagery | Public launch |
+| 7 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | Set the business number before launch; without it the CTAs fall back to mailto | Working WhatsApp CTAs |
+| 8 | Transactional email and WhatsApp providers | Resend or SES for email; WhatsApp Cloud API only after template approval | Quote and payment notifications |
+
+**Resolved by engineering (no owner input needed):** `ArtworkAsset.organizationId` stays required. Artwork is accepted only after a lead is qualified into a buyer organisation; until then buyers send logos by WhatsApp, as the enquiry form already says. The `leadId` link on `ArtworkAsset` is for artwork attached to a lead that already has an organisation. Calculation matches states by validated GST state code, not by name.
+
 ## Definition of launch-ready
 
 PlotArmour Merch is launch-ready when a buyer can find a verified launch product, submit a complete bulk brief, receive and accept a versioned quote, pay through a reconciled payment flow, approve artwork, see honest production/dispatch updates, and receive support without exposure to internal supplier/cost data. Staff must be able to perform each corresponding operation securely, recover from routine failures, and demonstrate the flow end-to-end in staging before production release.
