@@ -35,6 +35,7 @@ export default async function KitDetailPage({
       eyebrow="Curated merchandise kit"
       title={kit.name}
       description={kit.summary}
+      titleClassName="leading-[0.98] tracking-[-0.06em]"
     >
       <main className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">

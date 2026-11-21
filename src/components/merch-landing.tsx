@@ -262,7 +262,7 @@ export function MerchLanding() {
   );
 
   return (
-    <div className="relative overflow-x-clip bg-background text-foreground">
+    <div className="relative overflow-x-clip bg-background pb-20 text-foreground sm:pb-0">
       <FloatingWhatsApp />
 
       <header className="sticky top-0 z-40 border-b fine-rule bg-background/80 backdrop-blur-xl">

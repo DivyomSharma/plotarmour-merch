@@ -7,11 +7,13 @@ export function WorkspaceShell({
   title,
   description,
   children,
+  titleClassName,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children: ReactNode;
+  titleClassName?: string;
 }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -21,7 +23,9 @@ export function WorkspaceShell({
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-soft">
               {eyebrow}
             </p>
-            <h1 className="mt-4 font-display text-[2.6rem] font-semibold tracking-[-0.06em] md:text-[4.4rem]">
+            <h1
+              className={`mt-4 font-display text-[2.6rem] font-semibold tracking-[-0.06em] md:text-[4.4rem] ${titleClassName ?? ""}`}
+            >
               {title}
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-text-soft md:text-base">

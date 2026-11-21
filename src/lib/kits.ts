@@ -41,7 +41,7 @@ export const kits: Kit[] = [
       "Packaging inserts",
       "Size assortment",
     ],
-    coverImage: "/media/kits/employee-welcome.png",
+    coverImage: "/media/kits/employee-welcome.webp",
   },
   {
     slug: "startup-swag",
@@ -64,7 +64,7 @@ export const kits: Kit[] = [
       "Sticker artwork",
       "Colour matching",
     ],
-    coverImage: "/media/kits/startup-swag.png",
+    coverImage: "/media/kits/startup-swag.webp",
   },
   {
     slug: "college-fest",
@@ -87,7 +87,7 @@ export const kits: Kit[] = [
       "Volunteer identifiers",
       "Size matrices",
     ],
-    coverImage: "/media/kits/college-fest.png",
+    coverImage: "/media/kits/college-fest.webp",
   },
   {
     slug: "conference",
@@ -114,7 +114,7 @@ export const kits: Kit[] = [
       "Agenda inserts",
       "Packed-by-session bundles",
     ],
-    coverImage: "/media/kits/conference.png",
+    coverImage: "/media/kits/conference.webp",
   },
   {
     slug: "executive-gift",
@@ -141,7 +141,7 @@ export const kits: Kit[] = [
       "Gift-box branding",
       "Delivery splits",
     ],
-    coverImage: "/media/kits/executive-gift.png",
+    coverImage: "/media/kits/executive-gift.webp",
   },
 ];
 
