@@ -4,6 +4,12 @@ import { KitImage } from "@/components/kit-image";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { kits } from "@/lib/kits";
 
+const customKit = {
+  ...kits[0],
+  name: "Build your own kit",
+  coverImage: "/media/kits/custom-kit.webp",
+};
+
 export const metadata: Metadata = {
   title: "Merchandise kits",
   description:
@@ -47,12 +53,11 @@ export default function KitsPage() {
             href="/order?kit=Custom%20kit"
             className="surface-card group flex min-w-0 flex-col overflow-hidden rounded-[30px] transition-colors hover:border-[color:var(--border-strong)]"
           >
-            <div className="relative flex aspect-[4/3] items-end overflow-hidden bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--accent)_42%,transparent),_transparent_45%),linear-gradient(135deg,var(--surface-elevated),var(--surface))] p-5 md:p-6">
-              <p className="font-display text-[2rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[2.4rem]">
-                Your brief,<br />
-                built to fit.
-              </p>
-            </div>
+            <KitImage
+              kit={customKit}
+              alt="Mix-and-match merchandise blanks laid out beside an empty gift box"
+              fit="contain"
+            />
             <div className="flex flex-1 flex-col p-5 md:p-6">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-text">
                 Flexible starting point

@@ -219,7 +219,7 @@ export function LeadForm({
           <p className="mt-2 max-w-sm text-sm leading-6 text-text-soft">
             {submission === "saved"
               ? "Your request has been saved and opens as a pre-filled WhatsApp message."
-              : "Your details open as a pre-filled WhatsApp message. Nothing is saved on this site."}
+              : "Your details open as a pre-filled WhatsApp message so we can reply to you there."}
           </p>
         </div>
         <span className="rounded-full border border-[color:var(--border-strong)] px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-text-soft">
@@ -412,6 +412,7 @@ export function LeadForm({
         ) : submission === "blocked" ? (
           <>
             <p>
+              {reference ? `Saved. Your reference is ${reference}. ` : ""}
               WhatsApp could not be opened. Copy the details and paste them into
               WhatsApp to send your request.
             </p>
@@ -424,7 +425,9 @@ export function LeadForm({
             </button>
           </>
         ) : submission === "copied" ? (
-          "Details copied. Paste them into WhatsApp to send your request; nothing is saved on this site."
+          reference
+            ? `Details copied. Your reference is ${reference}. Paste them into WhatsApp to send your request.`
+            : "Details copied. Paste them into WhatsApp to send your request; nothing is saved on this site."
         ) : (
           "This request is sent via WhatsApp. Quotation, approvals, payments, and production are confirmed separately."
         )}

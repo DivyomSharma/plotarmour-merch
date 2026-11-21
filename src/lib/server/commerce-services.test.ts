@@ -78,6 +78,10 @@ describe("processRazorpayEvent", () => {
     expect((await database.query<{ status: string }>('SELECT "status" FROM "Payment"')).rows[0].status).toBe("paid"); expect((await database.query<{ status: string }>('SELECT "status" FROM "Order"')).rows[0].status).toBe("confirmed"); expect(await count("OrderStatusEvent")).toBe(1); expect(await count("OutboxEvent")).toBe(1);
     await expect(processRazorpayEvent(db, { rawBody: hook.body, signature: hook.signature, secret: "secret", eventId: "evt1" })).resolves.toEqual({ outcome: "duplicate" });
     const failed = webhook("payment.failed"); await expect(processRazorpayEvent(db, { rawBody: failed.body, signature: failed.signature, secret: "secret", eventId: "evt2" })).resolves.toEqual({ outcome: "processed" }); expect((await database.query<{ status: string }>('SELECT "status" FROM "Payment"')).rows[0].status).toBe("paid");
+    // A blocked downgrade is audited but must not announce "payment failed" for a paid payment.
+    expect(await count("OutboxEvent")).toBe(1); expect(await count("AuditEvent")).toBe(1);
+    // Replaying the capture under a new event id is a no-op: no second notification.
+    const again = webhook("payment.captured"); await expect(processRazorpayEvent(db, { rawBody: again.body, signature: again.signature, secret: "secret", eventId: "evt3" })).resolves.toEqual({ outcome: "processed" }); expect(await count("OutboxEvent")).toBe(1);
   });
   it("rejects invalid signatures and handles mismatch, unmatched, crash recovery and ignored events", async () => {
     await seedPayment(); const db = transactionalPGlite(database); const hook = webhook("payment.captured");

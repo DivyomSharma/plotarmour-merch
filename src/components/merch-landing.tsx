@@ -7,13 +7,14 @@ import {
   useTransform,
 } from "framer-motion";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { buildWhatsAppLink } from "@/lib/contact";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { MagneticButton } from "@/components/magnetic-button";
 import { ProductShowcase } from "@/components/product-showcase";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { orderSteps } from "@/lib/order-steps";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { kits } from "@/lib/kits";
 
@@ -248,7 +249,7 @@ function PackageCard({
   );
 }
 
-export function MerchLanding() {
+export function MerchLanding({ faq }: { faq?: ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const wordY = useTransform(
@@ -421,14 +422,15 @@ export function MerchLanding() {
                 <div className="max-w-3xl">
                   <SectionEyebrow>Capabilities</SectionEyebrow>
                   <h2 className="mt-6 font-display text-[2.4rem] font-semibold leading-[0.98] tracking-[-0.06em] text-foreground md:text-[4rem]">
-                    Real products, real GSM bands, and source-backed visuals
-                    presented in a cleaner B2B format.
+                    Real garments and real GSM bands, shortlisted before you
+                    ask for a quote.
                   </h2>
                 </div>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
-                  Every visible product below maps to a live catalog reference.
-                  The goal is to let a buyer shortlist the exact base garment
-                  before the quote and workspace flow begins.
+                  Browse the base styles with fabric, GSM and colour options,
+                  then ask for a quote on the one that fits. Prices shown are
+                  indicative blank-garment prices; your quote confirms the
+                  final numbers.
                 </p>
               </div>
             </ScrollReveal>
@@ -502,9 +504,8 @@ export function MerchLanding() {
                 execution.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-8 text-text-soft">
-                The redesign is intentionally calmer because the audience here
-                is not browsing for entertainment. They are assessing whether
-                you can handle quality, clarity, and delivery without friction.
+                Teams buying in bulk want quality, clarity and delivery without
+                friction. The way we work is built around exactly that.
               </p>
             </ScrollReveal>
 
@@ -565,9 +566,8 @@ export function MerchLanding() {
                   </h2>
                 </div>
                 <p className="max-w-xl text-base leading-8 text-text-soft">
-                  No pricing here by design. The range framing simply makes it
-                  easier for a buyer to understand where their requirement sits
-                  before entering the project flow.
+                  No pricing here by design. The ranges simply help you see
+                  where your requirement sits before you send an enquiry.
                 </p>
               </div>
             </ScrollReveal>
@@ -582,19 +582,23 @@ export function MerchLanding() {
           </div>
         </section>
 
+        {faq ? (
+          <section id="faq" className="section-shell border-b fine-rule px-4 py-16 md:px-6 md:py-24">
+            <div className="mx-auto max-w-7xl">{faq}</div>
+          </section>
+        ) : null}
+
         <section className="section-shell px-4 py-16 md:px-6 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
             <ScrollReveal>
               <SectionEyebrow>Order Flow</SectionEyebrow>
               <h2 className="mt-6 max-w-2xl font-display text-[2.8rem] font-semibold leading-[0.96] tracking-[-0.07em] text-foreground md:text-[4.6rem]">
-                Keep the landing page clean. Move the real work into the
-                workspace.
+                Tell us what you need. We will quote it properly.
               </h2>
               <p className="mt-6 max-w-xl text-base leading-8 text-text-soft">
-                The public site should market the catalogue and premium
-                positioning. The operational stack lives behind Order Now: lead
-                creation, discussion, project workspace, quotation, approvals,
-                payments, production, and dispatch.
+                Everything starts with a short enquiry. You get a reply with a
+                real quote, not a checkout page, and nothing is produced until
+                you have approved it.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <MagneticButton href="/order">Order Now</MagneticButton>
@@ -614,14 +618,7 @@ export function MerchLanding() {
               className="surface-panel rounded-[30px] p-6 md:p-8"
             >
               <div className="grid gap-4">
-                {[
-                  "Lead created from short form",
-                  "Internal sales discussion and qualification",
-                  "Project ID and secure client workspace",
-                  "Quotation preview, PDF, approvals, and revision history",
-                  "Advance payment, production specification, and sample approval",
-                  "Production, balance payment, dispatch, and timeline logging",
-                ].map((item, index) => (
+                {orderSteps.map((item, index) => (
                   <div
                     key={item}
                     className="flex items-start gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-4"

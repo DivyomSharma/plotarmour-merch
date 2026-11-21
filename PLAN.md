@@ -320,7 +320,7 @@ An independent hostile review of this plan produced the following. Each item was
 
 ## Open owner decisions, with recommended defaults (status as of the batch G commit)
 
-Everything buildable without accounts or business input is built and tested (kits, product pages, WhatsApp enquiry flow, domain state machines, Prisma schema, quote calculation, canonical hashing, quote acceptance, webhook verification, GST validation; 61 tests, Lighthouse 100 on accessibility, best practices and SEO, mobile hero LCP 0.9 s). The items below are the only things blocking the rest of Phase 1. Each can be answered in one line.
+Everything buildable without accounts or business input is built and tested: kits and product pages with a bulk estimator, the enquiry flow (persisted to Postgres when `DATABASE_URL` is set, WhatsApp-only otherwise), domain state machines, the Prisma schema and migration, RLS policies proven against real Postgres semantics (PGlite), transactional quote acceptance, the Razorpay webhook route (raw-body signature, event ledger, retryable unmatched events, no downgrade of paid payments), GST validation, and a "Before you order" FAQ. 99 tests; Lighthouse 100 on accessibility, best practices and SEO; mobile hero LCP 0.9 s. `npm run dev:db` gives a local migrated Postgres. Environment variables needed in production: `DATABASE_URL`, `RAZORPAY_WEBHOOK_SECRET`, `NEXT_PUBLIC_WHATSAPP_NUMBER`. The items below are the only things blocking the rest of Phase 1. Each can be answered in one line.
 
 | # | Decision | Recommended default | Unblocks |
 | --- | --- | --- | --- |

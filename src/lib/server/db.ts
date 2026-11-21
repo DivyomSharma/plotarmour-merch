@@ -34,3 +34,7 @@ export function getDb(): TransactionalDb | null {
   };
   return db;
 }
+
+export function getRazorpayWebhookSecret(): string | undefined {
+  return process.env.RAZORPAY_WEBHOOK_SECRET;
+}

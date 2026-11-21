@@ -9,5 +9,6 @@ Shared style line (repeated in every prompt): editorial product still life photo
 | 3 | public/media/kits/college-fest.webp | same | 4:3 | no | #1 style | stack of plain event tees, lanyard, canvas tote, volunteer tee |
 | 4 | public/media/kits/conference.webp | same | 4:3 | no | #1 style | delegate tote with notebook, bottle, lanyard and blank badge |
 | 5 | public/media/kits/executive-gift.webp | same | 4:3 | no | #1 style | folded premium polo, leather notebook, desk accessory, ribboned gift box |
+| 6 | public/media/kits/custom-kit.webp | /kits custom card | 4:3 | no | #1 style | mix-and-match merchandise blanks beside an empty gift box |
 
-Status: all 5 generated via Pixel Bridge (ChatGPT) on 2026-11-21, then compressed to WebP at a maximum width of 1600 px and quality 82. Inspected for text, logos, artifacts and palette; none found.
+Status: all 6 generated via Pixel Bridge (ChatGPT) on 2026-11-21, then compressed to WebP at a maximum width of 1600 px and quality 82. Inspected for text, logos, artifacts and palette; none found.

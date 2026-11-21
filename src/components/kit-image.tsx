@@ -6,9 +6,13 @@ import type { Kit } from "@/lib/kits";
 export function KitImage({
   kit,
   priority = false,
+  alt,
+  fit = "cover",
 }: {
   kit: Kit;
   priority?: boolean;
+  alt?: string;
+  fit?: "contain" | "cover";
 }) {
   const hasImage = existsSync(
     path.join(process.cwd(), "public", kit.coverImage),
@@ -19,11 +23,11 @@ export function KitImage({
       {hasImage ? (
         <Image
           src={kit.coverImage}
-          alt={`${kit.name} illustrative kit`}
+          alt={alt ?? `${kit.name} illustrative kit`}
           fill
           priority={priority}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-          className="object-cover"
+          className={fit === "contain" ? "object-contain" : "object-cover"}
         />
       ) : (
         <div

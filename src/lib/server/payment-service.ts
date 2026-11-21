@@ -77,6 +77,9 @@ export async function processRazorpayEvent(db: TransactionalDb, input: ProcessRa
       paymentRow = { id: paymentId, status: "initiated" };
     }
 
+    // Outbox events announce a state CHANGE. A blocked downgrade, a no-op replay or a rejected
+    // transition must never notify anyone (e.g. "payment failed" for a paid payment).
+    let stateChanged = false;
     if (event === "payment.captured") {
       if (paymentRow.status !== "paid") {
         if (paymentRow.status === "failed" || paymentRow.status === "expired" || paymentRow.status === "refunded") {
@@ -84,6 +87,7 @@ export async function processRazorpayEvent(db: TransactionalDb, input: ProcessRa
         } else {
           assertTransition("payment", paymentRow.status, "paid");
           await tx.query(`UPDATE "Payment" SET "status" = 'paid', "version" = "version" + 1, "updatedAt" = $1 WHERE "id" = $2`, [now, paymentRow.id]);
+          stateChanged = true;
           const orders = await tx.query(`SELECT "id", "status", "version" FROM "Order" WHERE "id" = $1 AND "organizationId" = $2 FOR UPDATE`, [attempt.orderId, attempt.organizationId]);
           const order = orders.rows[0] as OrderRow | undefined;
           if (!order) throw new Error("Payment attempt references no order.");
@@ -99,11 +103,14 @@ export async function processRazorpayEvent(db: TransactionalDb, input: ProcessRa
     } else if (paymentRow.status !== "failed") {
       assertTransition("payment", paymentRow.status, "failed");
       await tx.query(`UPDATE "Payment" SET "status" = 'failed', "version" = "version" + 1, "updatedAt" = $1 WHERE "id" = $2`, [now, paymentRow.id]);
+      stateChanged = true;
     }
 
     // A captured payment equal to the attempt amount confirms the order: the attempt is the advance request. Advance-percentage policy is an owner decision.
     await markProcessed(tx, gateway.id, now);
-    await tx.query(`INSERT INTO "OutboxEvent" ("id", "organizationId", "type", "payload") VALUES ($1, $2, $3, $4::jsonb)`, [randomUUID(), attempt.organizationId, event, json({ paymentId: paymentRow.id, orderId: attempt.orderId, gatewayEventId: gateway.id })]);
+    if (stateChanged) {
+      await tx.query(`INSERT INTO "OutboxEvent" ("id", "organizationId", "type", "payload") VALUES ($1, $2, $3, $4::jsonb)`, [randomUUID(), attempt.organizationId, event, json({ paymentId: paymentRow.id, orderId: attempt.orderId, gatewayEventId: gateway.id })]);
+    }
     return { outcome: "processed" };
   });
 }

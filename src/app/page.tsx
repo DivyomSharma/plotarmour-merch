@@ -73,6 +73,7 @@ const structuredData = {
 };
 
 import { MerchLanding } from "@/components/merch-landing";
+import { OrderFaq } from "@/components/order-faq";
 
 export default function Home() {
   return (
@@ -81,7 +82,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <MerchLanding />
+      <MerchLanding faq={<OrderFaq />} />
     </>
   );
 }
