@@ -26,6 +26,10 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 On Windows, run `npm test` from PowerShell or cmd. In some Git Bash setups Vitest fails with `Cannot read properties of undefined (reading 'config')` and reports no tests; this is an environment quirk, not a test failure.
 
+### Real-Postgres concurrency tests
+
+`src/lib/server/concurrency.realdb.test.ts` proves the double-accept and double-webhook races against a real PostgreSQL (parallel connections, real SERIALIZABLE conflicts). It is skipped unless `REAL_DATABASE_URL` points at a **disposable** server, for example `postgresql://postgres@127.0.0.1:56432/postgres`. The suite creates its own uniquely named database on that server and drops it afterwards; it never uses any default URL, so never point it at a server whose other databases you care about.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

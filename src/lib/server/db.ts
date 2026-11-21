@@ -17,7 +17,7 @@ export function getDb(): TransactionalDb | null {
     return db;
   }
   configurePgTime();
-  const connectionPool = new Pool({ connectionString, max: 3, connectionTimeoutMillis: 5_000, idleTimeoutMillis: 10_000 });
+  const connectionPool = new Pool({ connectionString, max: Number(process.env.DB_POOL_MAX ?? 3), connectionTimeoutMillis: 5_000, idleTimeoutMillis: 10_000 });
   db = {
     query: (text: string, params?: unknown[]) => connectionPool.query(text, params),
     async transaction<T>(fn: (tx: SqlClient) => Promise<T>): Promise<T> {
