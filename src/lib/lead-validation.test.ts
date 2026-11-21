@@ -29,6 +29,18 @@ describe("lead validation", () => {
     expect(MIN_ORDER_QUANTITY).toBe(10);
   });
 
+  it("caps quantities at the database-safe maximum with a clear message", () => {
+    expect(validateLead({ ...validLead, expectedQuantity: "1,000,000" }).ok).toBe(true);
+    expect(validateLead({ ...validLead, expectedQuantity: "1,000,001" })).toEqual({
+      ok: false,
+      errors: {
+        expectedQuantity: "For programmes above 1,000,000 pieces, contact us on WhatsApp.",
+      },
+    });
+    // Would overflow a 32-bit integer column; must be a validation error, not a save failure.
+    expect(validateLead({ ...validLead, expectedQuantity: "99999999999" }).ok).toBe(false);
+  });
+
   it("accepts Indian phone numbers with or without the country code", () => {
     expect(normaliseIndianPhone("+91 98765 43210")).toBe("9876543210");
     expect(normaliseIndianPhone("9876543210")).toBe("9876543210");

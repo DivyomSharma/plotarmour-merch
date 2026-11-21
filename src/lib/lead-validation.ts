@@ -1,4 +1,6 @@
 export const MIN_ORDER_QUANTITY = 10;
+// The database column is a 32-bit integer; very large programmes are handled by conversation, not the form.
+export const MAX_ORDER_QUANTITY = 1_000_000;
 
 export type LeadValidationInput = {
   name: string;
@@ -56,7 +58,10 @@ export function validateLead(input: LeadValidationInput): LeadValidationResult {
   }
 
   const expectedQuantity = parseQuantity(input.expectedQuantity);
-  if (
+  if (expectedQuantity && expectedQuantity > MAX_ORDER_QUANTITY) {
+    errors.expectedQuantity =
+      "For programmes above 1,000,000 pieces, contact us on WhatsApp.";
+  } else if (
     input.expectedQuantity.trim() &&
     (!expectedQuantity || expectedQuantity < MIN_ORDER_QUANTITY)
   ) {

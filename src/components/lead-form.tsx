@@ -22,7 +22,7 @@ type LeadFormState = {
   wantsSampleKit: boolean;
 };
 type FieldName = LeadValidationField;
-type SubmissionState = "idle" | "sent" | "blocked" | "copied";
+type SubmissionState = "idle" | "sent" | "saved" | "blocked" | "copied";
 
 const initialState: LeadFormState = {
   name: "",
@@ -65,7 +65,12 @@ export function LeadForm({
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [submission, setSubmission] = useState<SubmissionState>("idle");
   const [message, setMessage] = useState("");
+  const [reference, setReference] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // State drives the UI, but is not updated synchronously; the ref blocks same-tick double submits.
+  const submittingRef = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
   const update = <K extends keyof LeadFormState>(
     key: K,
     value: LeadFormState[K],
@@ -74,6 +79,7 @@ export function LeadForm({
     if (key in errors)
       setErrors((current) => ({ ...current, [key]: undefined }));
     setSubmission("idle");
+    setReference(null);
   };
   const focusField = (field: FieldName) =>
     window.requestAnimationFrame(() =>
@@ -90,8 +96,9 @@ export function LeadForm({
   const describedBy = (field: FieldName) =>
     errors[field] ? `${field}-error` : undefined;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submittingRef.current) return;
     const requiredFields: FieldName[] = [
       "name",
       "phone",
@@ -109,7 +116,7 @@ export function LeadForm({
       return;
     }
     const { expectedQuantity: quantity, phone } = validation.value;
-    const enquiry = [
+    const enquiryLines = [
       "PlotArmour Merch quote request",
       line("Name", formState.name),
       line("Phone", phone),
@@ -123,13 +130,70 @@ export function LeadForm({
       line("Sample requested", formState.wantsSampleKit),
       line("Customisation request", formState.customizationRequest),
       line("Remarks", formState.remarks),
-    ].join("\n");
+    ];
+    const initialEnquiry = enquiryLines.join("\n");
+    setMessage(initialEnquiry);
+
+    // Open synchronously so the browser preserves the submit gesture for WhatsApp.
+    const popup = window.open("about:blank", "_blank");
+    if (popup) popup.opener = null;
+    submittingRef.current = true;
+    setIsSubmitting(true);
+
+    // A blocked popup must not lose the enquiry: it is still saved, and the visitor gets the
+    // reference plus the copy fallback.
+    let publicId: string | null = null;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8_000);
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: formState.name,
+          phone: formState.phone,
+          organization: formState.organization,
+          selectedProduct: formState.selectedProduct,
+          expectedQuantity: formState.expectedQuantity,
+          remarks: formState.remarks,
+          customizationRequest: formState.customizationRequest,
+          deliveryDate: formState.deliveryDate,
+          deliveryLocation: formState.deliveryLocation,
+          budgetPerUnit: formState.budgetPerUnit,
+          decoration: formState.decoration,
+          wantsSample: formState.wantsSampleKit,
+          website: honeypotRef.current?.value ?? "",
+        }),
+        signal: controller.signal,
+      });
+      const result: unknown = await response.json().catch(() => null);
+      if (
+        response.status === 201 &&
+        result &&
+        typeof result === "object" &&
+        typeof (result as { publicId?: unknown }).publicId === "string"
+      ) {
+        publicId = (result as { publicId: string }).publicId;
+      }
+    } catch {
+      // Saving is optional; WhatsApp remains the delivery path.
+    } finally {
+      window.clearTimeout(timeout);
+    }
+
+    const enquiry = publicId
+      ? [...enquiryLines, `Reference: ${publicId}`].join("\n")
+      : initialEnquiry;
     setMessage(enquiry);
-    const popup = window.open(buildWhatsAppLink(enquiry), "_blank");
+    setReference(publicId);
     if (popup) {
-      popup.opener = null;
-      setSubmission("sent");
-    } else setSubmission("blocked");
+      popup.location.href = buildWhatsAppLink(enquiry);
+      setSubmission(publicId ? "saved" : "sent");
+    } else {
+      setSubmission("blocked");
+    }
+    submittingRef.current = false;
+    setIsSubmitting(false);
   };
   const copyDetails = async () => {
     try {
@@ -153,8 +217,9 @@ export function LeadForm({
             Request a quote
           </p>
           <p className="mt-2 max-w-sm text-sm leading-6 text-text-soft">
-            Your details open as a pre-filled WhatsApp message. Nothing is saved
-            on this site.
+            {submission === "saved"
+              ? "Your request has been saved and opens as a pre-filled WhatsApp message."
+              : "Your details open as a pre-filled WhatsApp message. Nothing is saved on this site."}
           </p>
         </div>
         <span className="rounded-full border border-[color:var(--border-strong)] px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-text-soft">
@@ -323,15 +388,27 @@ export function LeadForm({
           confirmed in the quote.
         </span>
       </label>
+      <input
+        ref={honeypotRef}
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="sr-only"
+      />
       <button
         type="submit"
-        className="flex min-h-13 w-full items-center justify-center rounded-full border border-accent bg-accent px-5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-accent-strong"
+        disabled={isSubmitting}
+        aria-busy={isSubmitting}
+        className="flex min-h-13 w-full items-center justify-center rounded-full border border-accent bg-accent px-5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-accent-strong disabled:cursor-wait disabled:opacity-60"
       >
-        Open WhatsApp quote request
+        {isSubmitting ? "Sending..." : "Open WhatsApp quote request"}
       </button>
       <div aria-live="polite" className="text-xs leading-5 text-text-soft">
         {submission === "sent" ? (
-          "A pre-filled WhatsApp message has opened. Send it to share your request; no server-side lead has been captured."
+          "A pre-filled WhatsApp message has opened. Send it to share your request; nothing is saved on this site."
+        ) : submission === "saved" ? (
+          <>Saved. Your reference is {reference}. WhatsApp is opening so we can reply to you.</>
         ) : submission === "blocked" ? (
           <>
             <p>
@@ -347,7 +424,7 @@ export function LeadForm({
             </button>
           </>
         ) : submission === "copied" ? (
-          "Details copied. Paste them into WhatsApp to send your request; no server-side lead has been captured."
+          "Details copied. Paste them into WhatsApp to send your request; nothing is saved on this site."
         ) : (
           "This request is sent via WhatsApp. Quotation, approvals, payments, and production are confirmed separately."
         )}
