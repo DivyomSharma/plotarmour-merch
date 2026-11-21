@@ -2,6 +2,10 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { buildWhatsAppLink } from "@/lib/contact";
+import {
+  type LeadValidationField,
+  validateLead,
+} from "@/lib/lead-validation";
 
 type LeadFormState = {
   name: string;
@@ -17,10 +21,7 @@ type LeadFormState = {
   decoration: string;
   wantsSampleKit: boolean;
 };
-type FieldName = keyof Pick<
-  LeadFormState,
-  "name" | "phone" | "organization" | "selectedProduct" | "expectedQuantity"
->;
+type FieldName = LeadValidationField;
 type SubmissionState = "idle" | "sent" | "blocked" | "copied";
 
 const initialState: LeadFormState = {
@@ -42,12 +43,6 @@ const inputClass =
 const labelClass =
   "mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-text-soft";
 
-function normaliseIndianPhone(value: string) {
-  const digits = value.replace(/\D/g, "");
-  const withoutCountryCode =
-    digits.startsWith("91") && digits.length === 12 ? digits.slice(2) : digits;
-  return /^\d{10}$/.test(withoutCountryCode) ? withoutCountryCode : null;
-}
 function line(label: string, value: string | boolean) {
   return `${label}: ${typeof value === "boolean" ? (value ? "Yes" : "No") : value.trim() || "Not provided"}`;
 }
@@ -97,7 +92,6 @@ export function LeadForm({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const nextErrors: Partial<Record<FieldName, string>> = {};
     const requiredFields: FieldName[] = [
       "name",
       "phone",
@@ -105,31 +99,20 @@ export function LeadForm({
       "selectedProduct",
       "expectedQuantity",
     ];
-    requiredFields.forEach((field) => {
-      if (!formState[field].trim())
-        nextErrors[field] = "This field is required.";
-    });
-    if (formState.phone.trim() && !normaliseIndianPhone(formState.phone))
-      nextErrors.phone = "Enter a valid Indian 10-digit phone number.";
-    const quantity = Number.parseInt(
-      formState.expectedQuantity.replace(/[,\s]/g, ""),
-      10,
-    );
-    if (
-      formState.expectedQuantity.trim() &&
-      (!Number.isFinite(quantity) || quantity < 10)
-    )
-      nextErrors.expectedQuantity = "Minimum order is 10 pieces per style";
-    if (Object.keys(nextErrors).length) {
-      setErrors(nextErrors);
+    const validation = validateLead(formState);
+    if (!validation.ok) {
+      setErrors(validation.errors);
       setSubmission("idle");
-      focusField(requiredFields.find((field) => nextErrors[field]) ?? "name");
+      focusField(
+        requiredFields.find((field) => validation.errors[field]) ?? "name",
+      );
       return;
     }
+    const { expectedQuantity: quantity, phone } = validation.value;
     const enquiry = [
       "PlotArmour Merch quote request",
       line("Name", formState.name),
-      line("Phone", normaliseIndianPhone(formState.phone) ?? formState.phone),
+      line("Phone", phone),
       line("Organization", formState.organization),
       line("Product or kit", formState.selectedProduct),
       line("Expected quantity", String(quantity)),

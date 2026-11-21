@@ -133,10 +133,16 @@ Define transitions in one server-side domain layer, test them, and expose only p
 ```text
 Lead: new → qualified → quoted → won | lost | archived
 Quote: draft → internal_review → sent → changes_requested → sent → accepted | expired | rejected
+       draft | internal_review | sent | changes_requested → withdrawn
 Order: pending_advance → confirmed → proof_pending → production_ready → in_production → qc → dispatched → delivered → closed
-Payment: pending → initiated → paid | failed | expired | refunded
-Artwork: uploaded → scan_pending → review_required → proof_sent → approved | rejected | superseded
+       qc → in_production (rework); confirmed..qc → on_hold → (resume to a prior stage);
+       pending_advance | confirmed | proof_pending | on_hold → cancelled (never after dispatch)
+Payment: pending → initiated → paid | failed | expired
+         paid → partially_refunded | refunded;  partially_refunded → refunded
+Artwork: uploaded → scan_pending → review_required | rejected (scan failed) → proof_sent → approved | rejected | superseded
 ```
+
+The implemented tables live in `src/lib/domain/state-machines.ts` with tests; they are the source of truth and this block is kept in step with them. Amendments from the adversarial review: `initiated → refunded` was removed because an unpaid payment cannot be refunded; cancellation, hold, rework, partial refund, withdrawn quotes and failed scans are now representable. Still open: post-dispatch claims, returns, credit notes and settlement states.
 
 ## Pricing and commercial rules
 
@@ -190,7 +196,7 @@ Artwork: uploaded → scan_pending → review_required → proof_sent → approv
 - Label every public price "Indicative, blank garment, ex-GST; final price confirmed in quote". Decide whether competitor-derived figures and imagery may be used at all.
 - Make `/order` deliver the enquiry (validated, MOQ-checked, sent via WhatsApp with every field) until the quote builder persists leads in Phase 3.
 - Add kit pages (`/kits`, `/kits/[slug]`) with a headcount-times-budget tool. Kits are a first-class entity (`Kit`, `KitItem`, per-head budget range) so a budget-led brief ("₹500 per employee") becomes a quote line set in Phase 3.
-- Lean-path option for Phase 1: catalogue + quote request + staff-issued quotes + payment links first; defer the full state machines until volume justifies them.
+- Lean-path option for Phase 1: defer customer self-service (accounts, workspace, self-serve approvals) but NOT domain controls. The quote, order, artwork and payment state invariants, quote-version immutability and payment idempotency are Phase 1 prerequisites, because accepted-quote-to-production depends on them (adversarial review finding 8).
 
 ### 0. Discovery and commercial readiness (1–2 weeks)
 
@@ -282,6 +288,26 @@ Artwork: uploaded → scan_pending → review_required → proof_sent → approv
 
 - Reseller onboarding, API credentials, white-label shipping, order import APIs, Shopify/WooCommerce integrations, shipment webhooks, catalog synchronization, and settlement/reporting tooling.
 - Only enter this phase after service-level targets, customer support capacity, supplier contracts, data-processing controls, and exception processes are proven at Phase 1/2 volume.
+
+## Adversarial design review: binding requirements (Codex, 2026-11-21)
+
+An independent hostile review of this plan produced the following. Each item was checked against the plan and repo and is adopted as a requirement for the phase named.
+
+**Phase 1 (foundation) exit criteria additions**
+1. **Payment/webhook safety.** `PaymentAttempt` plus a gateway event ledger with a unique `(provider, event_id)`; a quote-accept idempotency key; optimistic version locks; order confirmation happens only inside one serializable transaction after verified reconciliation (a webhook may arrive before, or without, the browser redirect). Side effects (notifications, production jobs) go through a transactional outbox.
+2. **Immutable quote versions.** `QuoteVersion` stores a canonical JSON snapshot and hash of minor-unit lines, tax, shipping, terms, addresses and size matrix; exactly one active version per quote; `QuoteApproval(quote_version_id, hash, actor, timestamp)`; the `Order` references exactly the approved version and copies the full fulfilment snapshot in the same transaction.
+3. **Tenancy.** Every tenant-owned table carries `organization_id`; deny-by-default RLS based on membership; separate staff scope; no browser or service-role path to customer data; cross-tenant tests for every route and storage object; confirm Prisma's DB role cannot bypass RLS.
+4. **Prototype cutover.** The mock operational routes (`/owner/*`, `/projects/*`) and the hard-coded owner ID are deleted or return 404 before any production deploy, with a CI route-access test. Prisma/Supabase migrations, RLS policies, env validation and a rollback rehearsal are explicit Foundation exit criteria.
+
+**Before live payments (Phase 4 gate)**
+5. **India tax and invoicing.** Immutable line-level `TaxSnapshot` and `Invoice`: seller legal entity and GSTIN, place of supply, HSN/SAC, CGST/SGST/IGST, rounding, GSTIN validation evidence, TCS applicability, credit/debit notes, invoice numbering by financial period, and a decision on e-invoice/e-way-bill applicability. Finance/CA sign-off is a launch blocker.
+6. **Razorpay webhooks.** Persist the raw body and hash, verify the signature before parsing, handle authorized/captured/failed/disputed events, replay window, secret rotation, and reconcile via the Razorpay API.
+
+**Security**
+7. **Access links.** Public IDs only locate resources; access requires an authenticated session or a short-lived, single-use, hashed action token bound to resource, version and email, consumed atomically; tokens are redacted from logs and referrers; re-authorize before issuing every signed URL.
+8. **Uploads.** Direct upload to a private quarantine prefix; verify magic bytes; asynchronous antivirus; previews generated in an isolated worker; promote only clean, immutable objects; deny download while pending or failed; archive expansion limits.
+
+**Omissions to resolve before launch:** data retention, deletion and export implementation (DPDP); disaster-recovery objectives and restore-test cadence; rate limiting and bot protection; accounting audit trail; incident runbooks (supplier failure, lost shipment, escalation).
 
 ## Decisions required before implementation starts
 
