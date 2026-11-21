@@ -178,7 +178,9 @@ describe("Postgres RLS policies", () => {
   });
 
   it("enforces append-only records even for the owner", async () => {
-    for (const table of ["AuditEvent", "OrderStatusEvent", "QuoteVersion", "TaxSnapshot", "QuoteApproval"]) {
+    // QuoteLine is included: order lines are copied from it, so editing it after approval would
+    // let an order differ from the quote the customer accepted.
+    for (const table of ["AuditEvent", "OrderStatusEvent", "QuoteVersion", "QuoteLine", "TaxSnapshot", "QuoteApproval"]) {
       await expect(db.exec(`UPDATE ${quoted(table)} SET "id" = "id"`)).rejects.toThrow();
       await expect(db.exec(`DELETE FROM ${quoted(table)}`)).rejects.toThrow();
     }

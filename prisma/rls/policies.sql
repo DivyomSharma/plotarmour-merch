@@ -207,6 +207,9 @@ DROP TRIGGER IF EXISTS quote_version_reject_mutation ON "QuoteVersion";
 CREATE TRIGGER quote_version_reject_mutation BEFORE UPDATE OR DELETE ON "QuoteVersion" FOR EACH ROW EXECUTE FUNCTION app.reject_mutation();
 DROP TRIGGER IF EXISTS tax_snapshot_reject_mutation ON "TaxSnapshot";
 CREATE TRIGGER tax_snapshot_reject_mutation BEFORE UPDATE OR DELETE ON "TaxSnapshot" FOR EACH ROW EXECUTE FUNCTION app.reject_mutation();
+-- Order lines are copied from QuoteLine rows, so those rows must be as immutable as the hashed version.
+DROP TRIGGER IF EXISTS quote_line_reject_mutation ON "QuoteLine";
+CREATE TRIGGER quote_line_reject_mutation BEFORE UPDATE OR DELETE ON "QuoteLine" FOR EACH ROW EXECUTE FUNCTION app.reject_mutation();
 DROP TRIGGER IF EXISTS quote_approval_reject_mutation ON "QuoteApproval";
 CREATE TRIGGER quote_approval_reject_mutation BEFORE UPDATE OR DELETE ON "QuoteApproval" FOR EACH ROW EXECUTE FUNCTION app.reject_mutation();
 DROP TRIGGER IF EXISTS gateway_event_reject_mutation ON "GatewayEvent";
