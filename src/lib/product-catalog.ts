@@ -10,8 +10,6 @@ export type CatalogProduct = {
     | "Kids & Bottomwear"
     | "Sweatshirts & Jackets";
   description: string;
-  bulkPrice: string;
-  samplePrice: string;
   bulkPriceMarkedUp: string;
   samplePriceMarkedUp: string;
   colorsCount: number;
@@ -20,7 +18,6 @@ export type CatalogProduct = {
   material: string;
   gsm: string;
   image: string;
-  url: string;
 };
 
 export const catalogProducts: CatalogProduct[] = [
@@ -31,8 +28,6 @@ export const catalogProducts: CatalogProduct[] = [
     category: "Oversized Tees",
     description:
       "240 GSM acid-wash oversized tee in French terry loopknit for heavier streetwear-led blanks.",
-    bulkPrice: "Rs 233",
-    samplePrice: "Rs 280",
     bulkPriceMarkedUp: "Rs 350",
     samplePriceMarkedUp: "Rs 420",
     colorsCount: 7,
@@ -41,7 +36,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "240",
     image: "https://www.bulkplaintshirt.com/catalog/images/acidwash-oversize/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/acidwash-oversize/",
   },
   {
     slug: "biowash-round-neck",
@@ -49,8 +43,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "YL Bio",
     category: "Round Neck Tees",
     description: "Regular-fit 180 GSM biowash tee built for volume printing and broad color demand.",
-    bulkPrice: "Rs 136",
-    samplePrice: "Rs 170",
     bulkPriceMarkedUp: "Rs 204",
     samplePriceMarkedUp: "Rs 255",
     colorsCount: 9,
@@ -59,7 +51,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "180",
     image: "https://www.bulkplaintshirt.com/catalog/images/biowash-round-neck/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/biowash-round-neck/",
   },
   {
     slug: "boxy-fit",
@@ -67,8 +58,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Boxy",
     category: "Oversized Tees",
     description: "180 GSM boxy drop-shoulder silhouette for cleaner streetwear programs.",
-    bulkPrice: "Rs 175",
-    samplePrice: "Rs 204",
     bulkPriceMarkedUp: "Rs 263",
     samplePriceMarkedUp: "Rs 306",
     colorsCount: 2,
@@ -77,7 +66,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "180",
     image: "https://www.bulkplaintshirt.com/catalog/images/boxy-fit/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/boxy-fit/",
   },
   {
     slug: "cotton-polo",
@@ -85,8 +73,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Polo",
     category: "Polo T-Shirts",
     description: "220 GSM matty polo for corporate uniforms and event-facing collared programs.",
-    bulkPrice: "Rs 185",
-    samplePrice: "Rs 222",
     bulkPriceMarkedUp: "Rs 278",
     samplePriceMarkedUp: "Rs 333",
     colorsCount: 7,
@@ -95,7 +81,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "220",
     image: "https://www.bulkplaintshirt.com/catalog/images/cotton-polo/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/cotton-polo/",
   },
   {
     slug: "dropshoulder-hoodie-430gsm",
@@ -103,8 +88,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Hood430",
     category: "Hoodies",
     description: "Heavy 430 GSM non-zip drop-shoulder hoodie for winter drops and premium merch.",
-    bulkPrice: "Rs 380",
-    samplePrice: "Rs 468",
     bulkPriceMarkedUp: "Rs 570",
     samplePriceMarkedUp: "Rs 702",
     colorsCount: 1,
@@ -114,7 +97,6 @@ export const catalogProducts: CatalogProduct[] = [
     gsm: "430",
     image:
       "https://www.bulkplaintshirt.com/catalog/images/dropshoulder-hoodie-430gsm/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/dropshoulder-hoodie-430gsm/",
   },
   {
     slug: "hoodie-320gsm-black",
@@ -122,8 +104,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Hood320-1",
     category: "Hoodies",
     description: "320 GSM pullover hoodie in black for leaner merch runs and dark-base branding.",
-    bulkPrice: "Rs 295",
-    samplePrice: "Rs 366",
     bulkPriceMarkedUp: "Rs 443",
     samplePriceMarkedUp: "Rs 549",
     colorsCount: 1,
@@ -133,7 +113,6 @@ export const catalogProducts: CatalogProduct[] = [
     gsm: "320",
     image:
       "https://www.bulkplaintshirt.com/catalog/images/hoodie-320gsm-black/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/hoodie-320gsm-black/",
   },
   {
     slug: "hoodie-320gsm",
@@ -141,8 +120,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Hood320-2",
     category: "Hoodies",
     description: "320 GSM non-zip hoodie with broader color availability for campus and team programs.",
-    bulkPrice: "Rs 325",
-    samplePrice: "Rs 402",
     bulkPriceMarkedUp: "Rs 488",
     samplePriceMarkedUp: "Rs 603",
     colorsCount: 7,
@@ -151,7 +128,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "320",
     image: "https://www.bulkplaintshirt.com/catalog/images/hoodie-320gsm/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/hoodie-320gsm/",
   },
   {
     slug: "hoodie-430gsm",
@@ -159,8 +135,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Hood430-2",
     category: "Hoodies",
     description: "430 GSM heavyweight hoodie for colder-city dispatches and higher-ticket merch.",
-    bulkPrice: "Rs 418",
-    samplePrice: "Rs 502",
     bulkPriceMarkedUp: "Rs 627",
     samplePriceMarkedUp: "Rs 753",
     colorsCount: 3,
@@ -169,7 +143,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "430",
     image: "https://www.bulkplaintshirt.com/catalog/images/hoodie-430gsm/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/hoodie-430gsm/",
   },
   {
     slug: "kids-round-neck",
@@ -177,8 +150,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Kids",
     category: "Kids & Bottomwear",
     description: "180 GSM kids biowash tee for school events, children’s programs, and family sets.",
-    bulkPrice: "Rs 114",
-    samplePrice: "Rs 144",
     bulkPriceMarkedUp: "Rs 171",
     samplePriceMarkedUp: "Rs 216",
     colorsCount: 5,
@@ -187,7 +158,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "180",
     image: "https://www.bulkplaintshirt.com/catalog/images/kids-round-neck/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/kids-round-neck/",
   },
   {
     slug: "non-bio-round-neck",
@@ -195,8 +165,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "NBio",
     category: "Round Neck Tees",
     description: "Entry-level 180 GSM round-neck tee for budget-sensitive plain or print programs.",
-    bulkPrice: "Rs 105",
-    samplePrice: "Rs 129",
     bulkPriceMarkedUp: "Rs 158",
     samplePriceMarkedUp: "Rs 194",
     colorsCount: 1,
@@ -205,7 +173,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "180",
     image: "https://www.bulkplaintshirt.com/catalog/images/non-bio-round-neck/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/non-bio-round-neck/",
   },
   {
     slug: "oversize-180gsm",
@@ -213,8 +180,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "OS180",
     category: "Oversized Tees",
     description: "Lightweight oversized tee for value-led drop-shoulder silhouettes.",
-    bulkPrice: "Rs 173",
-    samplePrice: "Rs 208",
     bulkPriceMarkedUp: "Rs 260",
     samplePriceMarkedUp: "Rs 312",
     colorsCount: 2,
@@ -223,7 +188,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "180",
     image: "https://www.bulkplaintshirt.com/catalog/images/oversize-180gsm/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/oversize-180gsm/",
   },
   {
     slug: "oversize-210gsm",
@@ -231,8 +195,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "OS210",
     category: "Oversized Tees",
     description: "210 GSM oversized tee for heavier handfeel without full heavyweight cost.",
-    bulkPrice: "Rs 185",
-    samplePrice: "Rs 222",
     bulkPriceMarkedUp: "Rs 278",
     samplePriceMarkedUp: "Rs 333",
     colorsCount: 10,
@@ -241,7 +203,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "210",
     image: "https://www.bulkplaintshirt.com/catalog/images/oversize-210gsm/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/oversize-210gsm/",
   },
   {
     slug: "oversize-240gsm",
@@ -249,8 +210,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "OS240",
     category: "Oversized Tees",
     description: "240 GSM drop-shoulder oversized tee with the broadest color spread in the line.",
-    bulkPrice: "Rs 190",
-    samplePrice: "Rs 228",
     bulkPriceMarkedUp: "Rs 285",
     samplePriceMarkedUp: "Rs 342",
     colorsCount: 14,
@@ -274,7 +233,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "240",
     image: "https://www.bulkplaintshirt.com/catalog/images/oversize-240gsm/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/oversize-240gsm/",
   },
   {
     slug: "premium-polo",
@@ -282,8 +240,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Bio Polo",
     category: "Polo T-Shirts",
     description: "220 GSM premium honeycomb polo for higher-finish corporate uniforms and gifting.",
-    bulkPrice: "Rs 232",
-    samplePrice: "Rs 285",
     bulkPriceMarkedUp: "Rs 348",
     samplePriceMarkedUp: "Rs 428",
     colorsCount: 4,
@@ -292,7 +248,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "220",
     image: "https://www.bulkplaintshirt.com/catalog/images/premium-polo/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/premium-polo/",
   },
   {
     slug: "shorts",
@@ -300,8 +255,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Shorts",
     category: "Kids & Bottomwear",
     description: "240 GSM loopknit shorts with zipped pockets for kits, active sets, and casual merch.",
-    bulkPrice: "Rs 217",
-    samplePrice: "Rs 261",
     bulkPriceMarkedUp: "Rs 326",
     samplePriceMarkedUp: "Rs 392",
     colorsCount: 4,
@@ -310,7 +263,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "100% Cotton",
     gsm: "240",
     image: "https://www.bulkplaintshirt.com/catalog/images/shorts/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/shorts/",
   },
   {
     slug: "sublimation-t-shirt",
@@ -318,8 +270,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Sublimation",
     category: "Round Neck Tees",
     description: "200 GSM cotton-feel sublimation tee for all-over print workflows.",
-    bulkPrice: "Rs 118",
-    samplePrice: "Rs 144",
     bulkPriceMarkedUp: "Rs 177",
     samplePriceMarkedUp: "Rs 216",
     colorsCount: 1,
@@ -328,7 +278,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "200",
     image: "https://www.bulkplaintshirt.com/catalog/images/sublimation-t-shirt/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/sublimation-t-shirt/",
   },
   {
     slug: "sweatshirt-2",
@@ -336,8 +285,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Sweatshirt-2",
     category: "Sweatshirts & Jackets",
     description: "320 GSM sweatshirt in alternate colorways for winter or campus layering.",
-    bulkPrice: "Rs 240",
-    samplePrice: "Rs 288",
     bulkPriceMarkedUp: "Rs 360",
     samplePriceMarkedUp: "Rs 432",
     colorsCount: 3,
@@ -346,7 +293,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "320",
     image: "https://www.bulkplaintshirt.com/catalog/images/sweatshirt-2/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/sweatshirt-2/",
   },
   {
     slug: "sweatshirt",
@@ -354,8 +300,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Sweatshirt",
     category: "Sweatshirts & Jackets",
     description: "320 GSM brushed-loopknit sweatshirt for straightforward cold-weather programs.",
-    bulkPrice: "Rs 225",
-    samplePrice: "Rs 276",
     bulkPriceMarkedUp: "Rs 338",
     samplePriceMarkedUp: "Rs 414",
     colorsCount: 4,
@@ -364,7 +308,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "320",
     image: "https://www.bulkplaintshirt.com/catalog/images/sweatshirt/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/sweatshirt/",
   },
   {
     slug: "true-biowash-round-neck",
@@ -372,8 +315,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "True Bio",
     category: "Round Neck Tees",
     description: "180 GSM supercombed biowash tee with the broadest regular-fit color matrix.",
-    bulkPrice: "Rs 146",
-    samplePrice: "Rs 181",
     bulkPriceMarkedUp: "Rs 219",
     samplePriceMarkedUp: "Rs 272",
     colorsCount: 14,
@@ -398,7 +339,6 @@ export const catalogProducts: CatalogProduct[] = [
     gsm: "180",
     image:
       "https://www.bulkplaintshirt.com/catalog/images/true-biowash-round-neck/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/true-biowash-round-neck/",
   },
   {
     slug: "varsity-jacket",
@@ -406,8 +346,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Varsity",
     category: "Sweatshirts & Jackets",
     description: "320 GSM varsity silhouette for societies, committees, and team-led jacket programs.",
-    bulkPrice: "Rs 335",
-    samplePrice: "Rs 402",
     bulkPriceMarkedUp: "Rs 503",
     samplePriceMarkedUp: "Rs 603",
     colorsCount: 1,
@@ -416,7 +354,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "320",
     image: "https://www.bulkplaintshirt.com/catalog/images/varsity-jacket/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/varsity-jacket/",
   },
   {
     slug: "zip-hoodie",
@@ -424,8 +361,6 @@ export const catalogProducts: CatalogProduct[] = [
     code: "Zipper",
     category: "Hoodies",
     description: "320 GSM zip hoodie for easier layering and event staff outerwear.",
-    bulkPrice: "Rs 325",
-    samplePrice: "Rs 390",
     bulkPriceMarkedUp: "Rs 488",
     samplePriceMarkedUp: "Rs 585",
     colorsCount: 1,
@@ -434,7 +369,6 @@ export const catalogProducts: CatalogProduct[] = [
     material: "88% Cotton, 12% Polyester",
     gsm: "320",
     image: "https://www.bulkplaintshirt.com/catalog/images/zip-hoodie/m.webp",
-    url: "https://www.bulkplaintshirt.com/catalog/p/zip-hoodie/",
   },
 ];
 
