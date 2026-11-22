@@ -3,6 +3,7 @@
 import { Pool } from "pg";
 
 import { configurePgTime } from "@/lib/server/pg-time";
+import { getServerEnv } from "@/lib/server/env";
 
 import type { SqlClient } from "@/lib/server/leads";
 import type { TransactionalDb } from "@/lib/server/transaction";
@@ -11,13 +12,13 @@ let db: TransactionalDb | null | undefined;
 
 export function getDb(): TransactionalDb | null {
   if (db !== undefined) return db;
-  const connectionString = process.env.DATABASE_URL;
+  const { databaseUrl: connectionString, dbPoolMax } = getServerEnv();
   if (!connectionString) {
     db = null;
     return db;
   }
   configurePgTime();
-  const connectionPool = new Pool({ connectionString, max: Number(process.env.DB_POOL_MAX ?? 3), connectionTimeoutMillis: 5_000, idleTimeoutMillis: 10_000 });
+  const connectionPool = new Pool({ connectionString, max: dbPoolMax, connectionTimeoutMillis: 5_000, idleTimeoutMillis: 10_000 });
   db = {
     query: (text: string, params?: unknown[]) => connectionPool.query(text, params),
     async transaction<T>(fn: (tx: SqlClient) => Promise<T>): Promise<T> {
@@ -39,5 +40,5 @@ export function getDb(): TransactionalDb | null {
 }
 
 export function getRazorpayWebhookSecret(): string | undefined {
-  return process.env.RAZORPAY_WEBHOOK_SECRET;
+  return getServerEnv().razorpayWebhookSecret;
 }
