@@ -21,12 +21,13 @@ export function FloatingWhatsApp() {
         href={buildWhatsAppLink(floatingMessage)}
         target="_blank"
         rel="noreferrer"
-        className="surface-panel flex items-center gap-3 rounded-full px-3 py-3 text-foreground transition-all duration-300 hover:border-accent"
+        aria-label="WA: chat on WhatsApp for a quick quote"
+        className="surface-panel flex h-15 w-15 items-center justify-center rounded-full p-3 text-foreground transition-all duration-300 hover:border-accent sm:h-auto sm:w-auto sm:gap-3 sm:px-3 sm:py-3"
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-white">
           WA
         </span>
-        <span className="pr-1 text-left">
+        <span className="hidden pr-1 text-left sm:block">
           <span className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-text-soft">
             WhatsApp
           </span>

@@ -40,7 +40,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       whileTap={{ scale: 0.96 }}
       aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-surface/80 text-foreground transition-colors duration-300 hover:border-accent hover:text-accent"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-surface/80 text-foreground transition-colors duration-300 hover:border-accent hover:text-accent-text"
     >
       <motion.span
         key={theme}

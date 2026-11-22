@@ -1,5 +1,5 @@
-const siteUrl = "https://merch.theplotarmour.xyz";
-const merchEmail = "merch@theplotarmour.xyz";
+const siteUrl = "https://merch.plotarmour.in";
+const merchEmail = "merch@plotarmour.in";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -73,15 +73,16 @@ const structuredData = {
 };
 
 import { MerchLanding } from "@/components/merch-landing";
+import { OrderFaq } from "@/components/order-faq";
 
 export default function Home() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
-      <MerchLanding />
+      <MerchLanding faq={<OrderFaq />} />
     </>
   );
 }

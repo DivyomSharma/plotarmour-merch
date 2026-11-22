@@ -78,8 +78,8 @@ export default async function Image() {
                 letterSpacing: "-0.06em",
               }}
             >
-              <span style={{ display: "flex" }}>Premium merch and gifting</span>
-              <span style={{ display: "flex" }}>for campuses, teams, and brands.</span>
+              <span style={{ display: "flex" }}>Your merchandise partner,</span>
+              <span style={{ display: "flex" }}>from concept to doorstep.</span>
             </div>
             <div
               style={{
@@ -102,7 +102,7 @@ export default async function Image() {
               alignItems: "center",
             }}
           >
-            {["MOQ from 30", "Quote in 24h", "Pan-India delivery"].map((item) => (
+            {["MOQ 10 pcs", "Quote in 24h", "Pan-India delivery"].map((item) => (
               <div
                 key={item}
                 style={{

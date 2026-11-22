@@ -1,0 +1,500 @@
+// Tenant deletion is a deliberate offboarding procedure, not a cascade: commercial retention and audit records are immutable.
+// Prisma relations cannot ensure a child's organizationId matches its parent's; RLS policies plus tests enforce that once Supabase exists.
+// RLS policies are NOT part of this file; they are written and tested once a Supabase project exists.
+// Tenant-owned models carry organizationId. Organization, StaffMember, and the global GatewayEvent ledger are the exceptions.
+// Lead is a documented nullable-organization exception while an anonymous enquiry is unqualified; it is set when a buyer organization is created or qualified.
+// Catalogue, supplier, and pricing models come next; they are deliberately outside Phase 1.
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrganizationRole {
+  owner
+  admin
+  buyer
+}
+
+enum StaffRole {
+  sales
+  production
+  finance
+}
+
+enum InvoiceKind {
+  tax_invoice
+  advance_receipt
+  credit_note
+  debit_note
+}
+
+enum ActorKind {
+  user
+  staff
+  system
+  webhook
+}
+
+enum LeadStatus {
+  new
+  qualified
+  quoted
+  won
+  lost
+  archived
+}
+
+enum QuoteStatus {
+  draft
+  internal_review
+  sent
+  changes_requested
+  accepted
+  expired
+  rejected
+  withdrawn
+}
+
+enum OrderStatus {
+  pending_advance
+  confirmed
+  proof_pending
+  production_ready
+  in_production
+  qc
+  on_hold
+  dispatched
+  delivered
+  closed
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  initiated
+  paid
+  failed
+  expired
+  partially_refunded
+  refunded
+}
+
+enum ArtworkStatus {
+  uploaded
+  scan_pending
+  review_required
+  proof_sent
+  approved
+  rejected
+  superseded
+}
+
+enum FileScanVerdict {
+  pending
+  clean
+  infected
+  failed
+}
+
+model Organization {
+  id                String               @id @default(uuid()) @db.Uuid
+  name              String
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  members           OrganizationMember[]
+  addresses         Address[]
+  leads             Lead[]
+  quotes            Quote[]
+  quoteVersions     QuoteVersion[]
+  quoteLines        QuoteLine[]
+  quoteApprovals    QuoteApproval[]
+  orders            Order[]
+  orderLines        OrderLine[]
+  orderStatusEvents OrderStatusEvent[]
+  artworkAssets     ArtworkAsset[]
+  fileScanResults   FileScanResult[]
+  paymentAttempts   PaymentAttempt[]
+  payments          Payment[]
+  invoices          Invoice[]
+  taxSnapshots      TaxSnapshot[]
+  auditEvents       AuditEvent[]
+  outboxEvents      OutboxEvent[]
+}
+
+model OrganizationMember {
+  id             String           @id @default(uuid()) @db.Uuid
+  organizationId String           @db.Uuid
+  userId         String           @db.Uuid
+  role           OrganizationRole
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+}
+
+model StaffMember {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @unique @db.Uuid
+  role      StaffRole
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Address {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  label          String
+  recipientName  String
+  line1          String
+  line2          String?
+  city           String
+  state          String
+  postalCode     String
+  countryCode    String       @default("IN")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+}
+
+model Lead {
+  id                   String         @id @default(uuid()) @db.Uuid
+  publicId             String         @unique
+  organizationId       String?        @db.Uuid
+  status               LeadStatus     @default(new)
+  contactName          String
+  contactPhone         String
+  contactEmail         String?
+  companyName          String?
+  source               String?
+  selectedProduct      String
+  kitSlug              String?
+  expectedQuantity     Int
+  deliveryDate         DateTime?
+  deliveryLocation     String?
+  budgetPerUnitAmount  Int?
+  currency             String         @default("INR")
+  decoration           String?
+  wantsSample          Boolean        @default(false)
+  customizationRequest String?
+  remarks              String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  organization         Organization?  @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  quotes               Quote[]
+  artworkAssets        ArtworkAsset[] @relation("LeadArtworkAssets")
+
+  @@index([organizationId])
+}
+
+model Quote {
+  id              String         @id @default(uuid()) @db.Uuid
+  publicId        String         @unique
+  organizationId  String         @db.Uuid
+  leadId          String?        @db.Uuid
+  status          QuoteStatus    @default(draft)
+  validUntil      DateTime?
+  activeVersionId String?        @unique @db.Uuid
+  version         Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  lead            Lead?          @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  activeVersion   QuoteVersion?  @relation("ActiveQuoteVersion", fields: [activeVersionId], references: [id])
+  versions        QuoteVersion[] @relation("QuoteVersions")
+  artworkAssets   ArtworkAsset[] @relation("QuoteArtworkAssets")
+
+  @@index([organizationId])
+  @@index([leadId])
+}
+
+model QuoteVersion {
+  id             String         @id @default(uuid()) @db.Uuid
+  organizationId String         @db.Uuid
+  quoteId        String         @db.Uuid
+  versionNumber  Int
+  canonicalJson  Json
+  contentHash    String
+  createdAt      DateTime       @default(now())
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  quote          Quote          @relation("QuoteVersions", fields: [quoteId], references: [id], onDelete: Restrict)
+  activeFor      Quote?         @relation("ActiveQuoteVersion")
+  lines          QuoteLine[]
+  approval       QuoteApproval?
+  order          Order?
+
+  @@unique([quoteId, versionNumber])
+  @@index([organizationId])
+  @@index([quoteId])
+}
+
+model QuoteLine {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  quoteVersionId String       @db.Uuid
+  description    String
+  quantity       Int
+  unitAmount     Int
+  totalAmount    Int
+  currency       String       @default("INR")
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  quoteVersion   QuoteVersion @relation(fields: [quoteVersionId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@index([quoteVersionId])
+}
+
+model QuoteApproval {
+  id                   String       @id @default(uuid()) @db.Uuid
+  organizationId       String       @db.Uuid
+  quoteVersionId       String       @unique @db.Uuid
+  contentHash          String
+  actorId              String       @db.Uuid
+  approvedAt           DateTime
+  acceptIdempotencyKey String       @unique
+  organization         Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  quoteVersion         QuoteVersion @relation(fields: [quoteVersionId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+}
+
+model Order {
+  id             String             @id @default(uuid()) @db.Uuid
+  publicId       String             @unique
+  organizationId String             @db.Uuid
+  quoteVersionId String             @unique @db.Uuid
+  status         OrderStatus        @default(pending_advance)
+  snapshot       Json
+  version        Int                @default(0)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  quoteVersion   QuoteVersion       @relation(fields: [quoteVersionId], references: [id], onDelete: Restrict)
+  lines          OrderLine[]
+  statusEvents   OrderStatusEvent[]
+  attempts       PaymentAttempt[]
+  payments       Payment[]
+  invoices       Invoice[]
+  artworkAssets  ArtworkAsset[]     @relation("OrderArtworkAssets")
+
+  @@index([organizationId])
+}
+
+model OrderLine {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  orderId        String       @db.Uuid
+  description    String
+  quantity       Int
+  unitAmount     Int
+  totalAmount    Int
+  currency       String       @default("INR")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@index([orderId])
+}
+
+model OrderStatusEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  orderId        String       @db.Uuid
+  actorId        String?      @db.Uuid
+  actorKind      ActorKind    @default(user)
+  fromStatus     OrderStatus
+  toStatus       OrderStatus
+  reason         String?
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@index([orderId])
+}
+
+model ArtworkAsset {
+  id              String          @id @default(uuid()) @db.Uuid
+  organizationId  String          @db.Uuid
+  quoteId         String?         @db.Uuid
+  orderId         String?         @db.Uuid
+  leadId          String?         @db.Uuid
+  status          ArtworkStatus   @default(uploaded)
+  storageKey      String          @unique
+  sha256          String
+  mimeType        String
+  sizeBytes       Int
+  ownerDeclared   Boolean         @default(false)
+  ownerDeclaredAt DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  quote           Quote?          @relation("QuoteArtworkAssets", fields: [quoteId], references: [id], onDelete: Restrict)
+  order           Order?          @relation("OrderArtworkAssets", fields: [orderId], references: [id], onDelete: Restrict)
+  lead            Lead?           @relation("LeadArtworkAssets", fields: [leadId], references: [id], onDelete: Restrict)
+  fileScanResult  FileScanResult?
+
+  @@index([organizationId])
+  @@index([quoteId])
+  @@index([orderId])
+  @@index([leadId])
+  @@index([sha256])
+}
+
+model FileScanResult {
+  id             String          @id @default(uuid()) @db.Uuid
+  organizationId String          @db.Uuid
+  artworkAssetId String          @unique @db.Uuid
+  verdict        FileScanVerdict @default(pending)
+  scanner        String?
+  scannedAt      DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  artworkAsset   ArtworkAsset    @relation(fields: [artworkAssetId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+}
+
+model PaymentAttempt {
+  id              String       @id @default(uuid()) @db.Uuid
+  organizationId  String       @db.Uuid
+  orderId         String       @db.Uuid
+  provider        String
+  providerOrderId String
+  amount          Int
+  currency        String       @default("INR")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  order           Order        @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  payments        Payment[]
+
+  @@unique([provider, providerOrderId])
+  @@index([organizationId])
+  @@index([orderId])
+}
+
+model Payment {
+  id                String          @id @default(uuid()) @db.Uuid
+  organizationId    String          @db.Uuid
+  orderId           String          @db.Uuid
+  paymentAttemptId  String?         @db.Uuid
+  status            PaymentStatus   @default(pending)
+  provider          String
+  providerPaymentId String?         @unique
+  amount            Int
+  refundedAmount    Int             @default(0)
+  currency          String          @default("INR")
+  version           Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  order             Order           @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  paymentAttempt    PaymentAttempt? @relation(fields: [paymentAttemptId], references: [id], onDelete: Restrict)
+  gatewayEvents     GatewayEvent[]
+
+  @@index([organizationId])
+  @@index([orderId])
+  @@index([paymentAttemptId])
+}
+
+model GatewayEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  paymentId   String?   @db.Uuid
+  provider    String
+  eventId     String
+  rawBody     String
+  rawBodyHash String
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+  payment     Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  @@unique([provider, eventId])
+  @@index([paymentId])
+}
+
+model Invoice {
+  id               String       @id @default(uuid()) @db.Uuid
+  organizationId   String       @db.Uuid
+  orderId          String       @db.Uuid
+  taxSnapshotId    String       @unique @db.Uuid
+  kind             InvoiceKind  @default(tax_invoice)
+  relatedInvoiceId String?      @db.Uuid
+  number           String
+  financialYear    String
+  issuedAt         DateTime
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  order            Order        @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  taxSnapshot      TaxSnapshot  @relation(fields: [taxSnapshotId], references: [id], onDelete: Restrict)
+  relatedInvoice   Invoice?     @relation("RelatedInvoices", fields: [relatedInvoiceId], references: [id], onDelete: Restrict)
+  relatedInvoices  Invoice[]    @relation("RelatedInvoices")
+
+  @@unique([financialYear, number])
+  @@index([organizationId])
+  @@index([orderId])
+  @@index([relatedInvoiceId])
+}
+
+model TaxSnapshot {
+  id                 String       @id @default(uuid()) @db.Uuid
+  organizationId     String       @db.Uuid
+  sellerGstin        String
+  buyerGstin         String?
+  placeOfSupplyState String
+  hsnOrSac           String
+  taxableValue       Int
+  cgst               Int
+  sgst               Int
+  igst               Int
+  tcs                Int
+  roundingAdjustment Int
+  currency           String       @default("INR")
+  createdAt          DateTime     @default(now())
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  invoice            Invoice?
+
+  @@index([organizationId])
+}
+
+model AuditEvent {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String?       @db.Uuid
+  actorId        String?       @db.Uuid
+  actorKind      ActorKind     @default(user)
+  action         String
+  entityType     String
+  entityId       String        @db.Uuid
+  fromStatus     String?
+  toStatus       String?
+  reason         String?
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@index([entityType, entityId])
+}
+
+model OutboxEvent {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String?       @db.Uuid
+  type           String
+  payload        Json
+  createdAt      DateTime      @default(now())
+  publishedAt    DateTime?
+  attempts       Int           @default(0)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@index([publishedAt])
+}

@@ -1,4 +1,4 @@
-export const MERCH_EMAIL = "merch@theplotarmour.xyz";
+export const MERCH_EMAIL = "merch@plotarmour.in";
 
 export function buildWhatsAppLink(message: string) {
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "");

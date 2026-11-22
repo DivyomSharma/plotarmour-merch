@@ -4,7 +4,7 @@ import { CustomCursor } from "@/components/custom-cursor";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
-const siteUrl = "https://merch.theplotarmour.xyz";
+const siteUrl = "https://merch.plotarmour.in";
 const siteName = "PlotArmour Merch";
 const defaultTitle = "PlotArmour Merch | Bulk Merch & Corporate Gifting";
 const defaultDescription =
@@ -123,6 +123,12 @@ export default function RootLayout({
       data-theme="dark"
       suppressHydrationWarning
     >
+      <head>
+        {/* Scroll-reveal content is hidden until JavaScript animates it in; show it without JS. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full bg-background text-foreground">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <SmoothScroll />

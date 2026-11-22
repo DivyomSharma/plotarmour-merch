@@ -1,0 +1,44 @@
+// Server-side only: lazy production PostgreSQL connection pool.
+
+import { Pool } from "pg";
+
+import { configurePgTime } from "@/lib/server/pg-time";
+import { getServerEnv } from "@/lib/server/env";
+
+import type { SqlClient } from "@/lib/server/leads";
+import type { TransactionalDb } from "@/lib/server/transaction";
+
+let db: TransactionalDb | null | undefined;
+
+export function getDb(): TransactionalDb | null {
+  if (db !== undefined) return db;
+  const { databaseUrl: connectionString, dbPoolMax } = getServerEnv();
+  if (!connectionString) {
+    db = null;
+    return db;
+  }
+  configurePgTime();
+  const connectionPool = new Pool({ connectionString, max: dbPoolMax, connectionTimeoutMillis: 5_000, idleTimeoutMillis: 10_000 });
+  db = {
+    query: (text: string, params?: unknown[]) => connectionPool.query(text, params),
+    async transaction<T>(fn: (tx: SqlClient) => Promise<T>): Promise<T> {
+      const client = await connectionPool.connect();
+      try {
+        await client.query("BEGIN ISOLATION LEVEL SERIALIZABLE");
+        const result = await fn({ query: (text, params) => client.query(text, params) });
+        await client.query("COMMIT");
+        return result;
+      } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+      } finally {
+        client.release();
+      }
+    },
+  };
+  return db;
+}
+
+export function getRazorpayWebhookSecret(): string | undefined {
+  return getServerEnv().razorpayWebhookSecret;
+}
