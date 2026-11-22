@@ -123,6 +123,12 @@ export default function RootLayout({
       data-theme="dark"
       suppressHydrationWarning
     >
+      <head>
+        {/* Scroll-reveal content is hidden until JavaScript animates it in; show it without JS. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full bg-background text-foreground">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <SmoothScroll />

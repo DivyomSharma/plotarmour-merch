@@ -40,6 +40,9 @@ export function ScrollReveal({
   return (
     <motion.div
       className={className}
+      // Hidden-until-revealed styles are inlined by the server render; the layout's <noscript>
+      // rule targets [data-reveal] so content stays visible when JavaScript is unavailable.
+      data-reveal=""
       initial={shouldReduceMotion ? false : { opacity: 0, y: 28, filter: "blur(8px)" }}
       whileInView={
         shouldReduceMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }

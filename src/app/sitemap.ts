@@ -3,7 +3,8 @@ import { kits } from "@/lib/kits";
 import { catalogProducts } from "@/lib/product-catalog";
 
 const siteUrl = "https://merch.plotarmour.in";
-const lastModified = new Date("2026-05-12");
+// Static routes are emitted during the build; the generated sitemap reflects that build date.
+const lastModified = new Date();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

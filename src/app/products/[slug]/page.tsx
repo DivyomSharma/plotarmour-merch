@@ -9,6 +9,8 @@ import { WorkspaceShell } from "@/components/workspace-shell";
 import { buildWhatsAppLink } from "@/lib/contact";
 import { catalogProducts, type CatalogProduct } from "@/lib/product-catalog";
 
+export const dynamicParams = false;
+
 const productImages: Record<CatalogProduct["category"], string> = {
   "Oversized Tees": "/products/tshirt.png",
   "Round Neck Tees": "/products/tshirt.png",

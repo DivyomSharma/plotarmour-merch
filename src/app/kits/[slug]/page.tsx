@@ -6,6 +6,8 @@ import { KitImage } from "@/components/kit-image";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { getKitBySlug, kits } from "@/lib/kits";
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return kits.map((kit) => ({ slug: kit.slug }));
 }
